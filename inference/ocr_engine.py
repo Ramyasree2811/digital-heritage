@@ -33,21 +33,27 @@ def get_ocr_reader():
         init_ocr()
     return ocr_reader
 
-def preprocess_image_for_ocr(image, max_dim=384):
+def _trim_ocr_memory():
+    """Releases freed memory back to OS."""
+    import gc
+    gc.collect()
+    try:
+        import ctypes
+        ctypes.CDLL('libc.so.6').malloc_trim(0)
+    except Exception:
+        pass
+
+def preprocess_image_for_ocr(image, max_dim=288):
     """
     Optimizes heritage image for fast, robust character detection.
-    Prevents downscaling wide palm-leaf banners which would shrink character height too much.
+    Strictly clamps max dimension to max_dim (<=288px) to prevent OOM on 512MB RAM instances.
     """
     h, w = image.shape[:2]
     
-    # If image height is small (typical of horizontal palm leaf strips), upscale to preserve stroke clarity
-    if h < 240 or w < 300:
-        scale = max(2.0, 360.0 / max(h, 1))
-        image = cv2.resize(image, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_LANCZOS4)
-        h, w = image.shape[:2]
-    elif max(h, w) > max_dim:
-        scale = max_dim / max(h, w)
-        image = cv2.resize(image, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_AREA)
+    # Strictly ensure maximum dimension does not exceed max_dim
+    if max(h, w) > max_dim:
+        scale = float(max_dim) / max(h, w)
+        image = cv2.resize(image, (max(16, int(w * scale)), max(16, int(h * scale))), interpolation=cv2.INTER_AREA)
         
     return image
 
@@ -85,15 +91,14 @@ def extract_text_from_heritage(image):
         ocr_kwargs = {
             "detail": 1,
             "paragraph": False,
-            "text_threshold": 0.35,
-            "low_text": 0.25,
-            "link_threshold": 0.25,
+            "text_threshold": 0.25,
+            "low_text": 0.20,
+            "link_threshold": 0.20,
             "slope_ths": 0.2,
             "mag_ratio": 1.0,
-            "canvas_size": 384
+            "canvas_size": 256
         }
-        import gc
-        gc.collect()
+        _trim_ocr_memory()
 
         # -------------------------------------------------------------
         # PASS 1: Natural RGB image with heritage-tuned sensitivity
@@ -119,6 +124,7 @@ def extract_text_from_heritage(image):
             except Exception:
                 pass
 
+        _trim_ocr_memory()
         raw_text = "\n".join(extracted_lines).strip()
         
         # -------------------------------------------------------------
