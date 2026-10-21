@@ -1,6 +1,6 @@
 # ==============================================================================
 # Production Dockerfile for Digital Heritage Restoration Platform
-# Optimized for Cloud Deployment (Render, Cloud Run, Hugging Face, AWS)
+# Compatible with Hugging Face Spaces (16GB RAM) & Cloud Services (Render, AWS)
 # ==============================================================================
 
 FROM python:3.11-slim
@@ -9,7 +9,7 @@ FROM python:3.11-slim
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     DEBIAN_FRONTEND=noninteractive \
-    PORT=10000
+    PORT=7860
 
 # Install essential system dependencies for OpenCV and image processing
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -20,7 +20,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
+# Set up non-root user (Standard for Hugging Face Spaces)
+RUN useradd -m -u 1000 user
 WORKDIR /app
 
 # Copy dependency requirements
@@ -35,11 +36,14 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy application source code and models
 COPY . /app
 
-# Create required cache and upload directories
-RUN mkdir -p static/uploads static/outputs outputs/checkpoints
+# Create required cache/output directories and set ownership
+RUN mkdir -p static/uploads static/outputs outputs/checkpoints && \
+    chown -R user:user /app
+
+USER user
 
 # Expose service port
-EXPOSE 10000
+EXPOSE 7860
 
-# Start production WSGI server with Gunicorn (1 worker + 4 threads to prevent OOM on 512MB RAM)
-CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-10000} --workers 1 --threads 4 --timeout 180 app:app"]
+# Start production WSGI server with Gunicorn
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-7860} --workers 1 --threads 4 --timeout 180 app:app"]
