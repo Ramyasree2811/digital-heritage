@@ -86,8 +86,6 @@ class HeritageRestorer:
         self.device = get_device()
         self._model_cache = {}
         self.best_model_name, self.config = self._read_best_config()
-        # Preload the best model into cache
-        self.get_model("best")
 
     def _read_best_config(self):
         cfg_path = os.path.join(MODELS_BEST_DIR, "model_config.json")
