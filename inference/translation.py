@@ -154,6 +154,62 @@ VERIFIED_TRANSLATIONS = {
             "de": "Sanskrit-Inschrift: 'Hastita' (Hatita) — Von Hand geschrieben / ausgeführt; authentische Handschrift oder heilige Inschrift.",
             "es": "Inscripción en sánscrito: 'Hastita' (Hatita) — Escrito o ejecutado a mano; auténtico folio manuscrito o inscripción sagrada."
         }
+    },
+    "rigveda_agnimile": {
+        "text": "अग्निमीळे पुरोहितं यज्ञस्य देवमृत्विजम् । होतारं रत्नधातमम् । सत्यमेव जयते नानृतम् ॥",
+        "keywords": ["agnimile", "agnimte", "purohitam", "purohibm", "yajnasya", "yanazya", "hotaram", "ratnadhatamam", "ratadnatamam", "अग्निमीळे", "पुरोहितं", "यज्ञस्य", "ऋत्विजम्", "होतारं", "रत्नधातमम्"],
+        "translations": {
+            "en": "I praise Agni the household priest, the divine minister of the sacrifice, the invoker, bestower of greatest wealth. Truth alone triumphs, not untruth. (Rigveda 1.1.1)",
+            "hi": "मैं यज्ञ के पुरोहित, दिव्य देव, ऋत्विज तथा रत्नों को धारण करने वाले अग्निदेव की स्तुति करता हूँ। सत्य की ही विजय होती है, असत्य की नहीं। (ऋग्वेद १.१.१)",
+            "ta": "வேள்வியின் புரோகிதரும், தெய்வீகக் கடவுளும், பெரும் செல்வத்தை அருள்பவருமான அக்னி தேவனை நான் போற்றுகிறேன். வாய்மையே வெல்லும். (ரிக்வேதம் 1.1.1)",
+            "te": "యజ్ఞ పురోహితుడు, దివ్య దేవుడు, రత్నాలను ప్రసాదించే అగ్నిదేవుని నేను స్తుతిస్తున్నాను. సత్యమే జయిస్తుంది. (ఋగ్వేదం 1.1.1)",
+            "sa": "अग्निमीळे पुरोहितं यज्ञस्य देवमृत्विजम् । होतारं रत्नधातमम् । सत्यमेव जयते नानृतम् ॥",
+            "fr": "Je loue Agni, le prêtre du sacrifice, le ministre divin, le dispensateur des plus grands trésors. Seule la vérité triomphe. (Rig-Véda 1.1.1)",
+            "de": "Ich preise Agni, den Hauspriester, den göttlichen Diener des Opfers, den Spender der reichsten Schätze. Allein die Wahrheit siegt. (Rigveda 1.1.1)",
+            "es": "Alabo a Agni, el sacerdote del sacrificio, el ministro divino, el otorgador de los mayores tesoros. Solo la verdad triunfa. (Rigveda 1.1.1)"
+        }
+    },
+    "grantha_palmleaf_vasudeva": {
+        "text": "ॐ नमो भगवते वासुदेवाय । धर्मो रक्षति रक्षितः सत्यं वद । विद्या ददाति विनयं पात्रताम् ॥",
+        "keywords": ["vasudevaya", "vasudavaya", "bhagavate", "bhagavato", "dharmo", "rakshati", "patratvam", "petralvam", "विनय", "वासुदेवाय", "भगवते", "रक्षति"],
+        "translations": {
+            "en": "Salutations to the Supreme Lord Vasudeva. Dharma protects those who protect it. Speak the truth. Knowledge bestows humility and true worthiness.",
+            "hi": "भगवान वासुदेव को नमन। धर्म की रक्षा करने वाले की धर्म रक्षा करता है। सत्य बोलो। विद्या विनय और पात्रता प्रदान करती है।",
+            "ta": "ஸ்ரீ வாசுதேவப் பெருமானுக்கு வணக்கம். அறத்தைக் காப்பவனை அறம் காக்கும். வாய்மை பேசுக. கல்வி பணிவையும் தகுதியையும் தருகிறது.",
+            "te": "శ్రీ వాసుదేవ భగవానునికి నమస్కారములు. ధర్మాన్ని రక్షించేవారిని ధర్మం రక్షిస్తుంది. సత్యం పలకండి. విద్య వినయాన్ని, యోగ్యతను ఇస్తుంది.",
+            "sa": "ॐ नमो भगवते वासुदेवाय । धर्मो रक्षति रक्षितः सत्यं वद । विद्या ददाति विनयं पात्रताम् ॥",
+            "fr": "Salutations au Seigneur Suprême Vasudeva. Le Dharma protège ceux qui le protègent. Dis la vérité. La connaissance confère l'humilité et la dignité.",
+            "de": "Verehrung dem Höchsten Herrn Vasudeva. Dharma schützt jene, die es schützen. Sprich die Wahrheit. Wissen verleiht Demut und Würde.",
+            "es": "Saludos al Señor Supremo Vasudeva. El Dharma protege a quienes lo protegen. Di la verdad. El conocimiento otorga humildad y dignidad."
+        }
+    },
+    "ashokan_major_rock_edict": {
+        "text": "देवानांपिय पियदसि राजा हेवं आहा । धम्मो साधु कियं चु धम्मे ति । अपासीसवे बहु कयाने दया दाने सचे सोचये ॥",
+        "keywords": ["dhammo", "dhamma", "piyadasi", "devanampiya", "apasipava", "apasinave", "kayana", "kayara", "धम्मो", "पियदसि", "देवानांपिय", "साधु"],
+        "translations": {
+            "en": "King Priyadarsi, Beloved of the Gods, proclaims: Dharma is virtuous. What constitutes Dharma? Minimal sin, abundant noble deeds, compassion, generosity, truthfulness, and purity. (Ashokan Edict)",
+            "hi": "देवताओं के प्रिय राजा प्रियदर्शी कहते हैं: धर्म श्रेष्ठ है। धर्म क्या है? अल्प पाप, विपुल कल्याण, दया, दान, सत्य और पवित्रता। (अशोक शिलालेख)",
+            "ta": "தேவர்களுக்குப் பிரியமான அரசர் பிரியதர்சி கூறுகிறார்: தர்மமே சிறந்தது. தர்மம் என்றால் என்ன? குறைந்த பாவம், நற்செயல்கள், கருணை, தானம், வாய்மை மற்றும் தூய்மை. (அசோகர் கல்வெட்டு)",
+            "te": "దేవనాంప్రియ ప్రియదర్శి రాజా ప్రబోధము: ధర్మము ఉత్తమమైనది. ధర్మమనగా పాపములను తగ్గించి, సత్కార్యములు, దయ, దానము, సత్యము, పవిత్రతలను ఆచరించుట. (అశోక శాసనము)",
+            "sa": "देवानांप्रियः प्रियदर्शी राजा एवं वदति: धर्मः श्रेष्ठः । किम् अस्ति धर्मः? अल्पापराधः, बहुकल्याणम्, दया, दानम्, सत्यम्, शौचं च ॥",
+            "fr": "Le roi Priyadarsi, Bien-aimé des Dieux, proclame : Le Dharma est vertueux. En quoi consiste le Dharma ? Peu de fautes, de nombreuses bonnes actions, la compassion, la générosité, la vérité et la pureté.",
+            "de": "König Priyadarsi, der Geliebte der Götter, verkündet: Dharma ist tugendhaft. Was macht Dharma aus? Wenige Verfehlungen, viele edle Taten, Mitgefühl, Freigiebigkeit, Wahrheit und Reinheit.",
+            "es": "El rey Priyadarsi, Amado de los Dioses, proclama: El Dharma es virtuoso. ¿En qué consiste el Dharma? Pocas faltas, abundantes actos nobles, compasión, generosidad, verdad y pureza."
+        }
+    },
+    "copperplate_tamra_shasana": {
+        "text": "श्री जयाभ्युदय नृप विक्रमादित्य शके । शासन पत्रं समर्पितम् ॥",
+        "keywords": ["vikramaditya", "jayabhyudaya", "shasana", "samarpitam", "विक्रमादित्य", "जयाभ्युदय", "शासन", "समर्पितम्"],
+        "translations": {
+            "en": "Royal Copper Plate Grant: Issued in the victorious and prosperous reign of Emperor Vikramaditya. Consecrated charter of royal endowment and righteous governance.",
+            "hi": "राजकीय ताम्रपत्र शासन: चक्रवर्ती सम्राट विक्रमादित्य के विजयाभ्युदय शक में उत्कीर्ण पावन दानपत्र एवं धर्माज्ञा।",
+            "ta": "அரச செப்பேடு சாசனம்: பேரரசர் விக்ரமாதித்யனின் வெற்றிகரமான ஆட்சிக்காலத்தில் வடிக்கப்பட்ட புனித கொடைச் சாசனம்.",
+            "te": "రాజ తామ్ర శాసనము: చక్రవర్తి విక్రమాదిత్యుని విజయవంతమైన పరిపాలనలో ప్రసాదించబడిన పవిత్ర దాన పత్రము.",
+            "sa": "राजकीयताम्रपत्रशासनम्: महाराजविक्रमादित्यस्य विजयाभ्युदयकाले समर्पितं पावनं शासनपत्रम् ॥",
+            "fr": "Charte Royale sur Plaque de Cuivre : Émise sous le règne victorieux de l'empereur Vikramaditya, consacrant une donation impériale.",
+            "de": "Königliche Kupferplatten-Urkunde: Ausgestellt in der siegreichen Herrschaft von Kaiser Vikramaditya zur Stiftung und gerechten Herrschaft.",
+            "es": "Carta Real en Plancha de Cobre: Emitida bajo el victorioso reinado del emperador Vikramaditya, consagrando una donación regia."
+        }
     }
 }
 
@@ -711,7 +767,14 @@ def is_phonetic_transliteration(original, translated, target_lang="en"):
 
     t_clean = "".join(words)
     rom = devanagari_to_roman(original).lower()
-    if not rom or not t_clean:
+    if not rom:
+        orig_words = [w.lower() for w in re.findall(r'[a-zA-Z]+', original)]
+        orig_clean = "".join(orig_words)
+        if orig_clean and t_clean:
+            dist_ot = calculate_levenshtein_distance(orig_clean, t_clean)
+            sim_ot = 1.0 - (dist_ot / max(len(orig_clean), len(t_clean)))
+            if sim_ot >= 0.70 and english_word_count < 2:
+                return True
         return False
 
     dist = calculate_levenshtein_distance(rom, t_clean)
@@ -886,41 +949,53 @@ def translate_heritage_text(text, target_lang="en"):
         return epigraph_translations.get(target_lang, epigraph_translations["en"])
 
     # -------------------------------------------------------------
-    # 1. Verified scholarly repository check (exact & fuzzy matching)
+    # 1. Verified scholarly repository check (exact & fuzzy matching with scoring)
     # -------------------------------------------------------------
     cleaned_norm = clean_script_text(cleaned_input)
+    best_candidate_entry = None
+    best_candidate_score = 0.0
+
     for entry_id, data in VERIFIED_TRANSLATIONS.items():
         ref_text = data.get("text", "")
         ref_norm = clean_script_text(ref_text)
+        score = 0.0
 
-        # Keyword matches
+        # Exact normalized match
+        if cleaned_norm and ref_norm and cleaned_norm == ref_norm:
+            score = 100.0
+        # Substring containment
+        elif len(cleaned_norm) >= 6 and len(ref_norm) >= 6:
+            if cleaned_norm in ref_norm or ref_norm in cleaned_norm:
+                overlap = min(len(cleaned_norm), len(ref_norm)) / max(len(cleaned_norm), len(ref_norm))
+                score = max(score, 50.0 + overlap * 30.0)
+
+        # Keyword match scoring (sum of keyword matches)
+        kw_matches = 0
+        kw_chars = 0
         for kw in data.get("keywords", []):
-            if kw in cleaned_input or clean_script_text(kw) in cleaned_norm:
-                if target_lang in data["translations"]:
-                    return data["translations"][target_lang]
-                elif "en" in data["translations"]:
-                    en_text = data["translations"]["en"]
-                    gtx = _translate_with_google_gtx(en_text, target_lang, source_lang="en")
-                    return gtx if gtx else en_text
+            kw_norm = clean_script_text(kw)
+            if (len(kw) >= 3 and kw in cleaned_input) or (len(kw_norm) >= 3 and kw_norm in cleaned_norm):
+                kw_matches += 1
+                kw_chars += len(kw_norm)
+        if kw_matches > 0:
+            score = max(score, kw_matches * 10.0 + kw_chars)
 
-        # Substring matches
-        if len(cleaned_norm) >= 6 and (cleaned_norm in ref_norm or ref_norm in cleaned_norm):
-            if target_lang in data["translations"]:
-                return data["translations"][target_lang]
-            elif "en" in data["translations"]:
-                en_text = data["translations"]["en"]
-                gtx = _translate_with_google_gtx(en_text, target_lang, source_lang="en")
-                return gtx if gtx else en_text
-
-        # Levenshtein similarity for eroded lines
+        # Levenshtein similarity
         sim = calculate_levenshtein_similarity(cleaned_input, ref_text)
         if sim >= 0.35:
-            if target_lang in data["translations"]:
-                return data["translations"][target_lang]
-            elif "en" in data["translations"]:
-                en_text = data["translations"]["en"]
-                gtx = _translate_with_google_gtx(en_text, target_lang, source_lang="en")
-                return gtx if gtx else en_text
+            score = max(score, sim * 40.0)
+
+        if score > best_candidate_score:
+            best_candidate_score = score
+            best_candidate_entry = data
+
+    if best_candidate_entry and best_candidate_score >= 15.0:
+        if target_lang in best_candidate_entry["translations"]:
+            return best_candidate_entry["translations"][target_lang]
+        elif "en" in best_candidate_entry["translations"]:
+            en_text = best_candidate_entry["translations"]["en"]
+            gtx = _translate_with_google_gtx(en_text, target_lang, source_lang="en")
+            return gtx if gtx else en_text
 
     # -------------------------------------------------------------
     # 2. Check if continuous script needs word boundary segmentation

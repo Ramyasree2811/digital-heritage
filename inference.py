@@ -285,18 +285,25 @@ class HeritageRestorer:
         Processes high-resolution images via sliding-window patches with 2D Hann window blending.
         Eliminates boundary seam artifacts and ensures constant memory footprint on CPU/GPU.
         """
-        h, w = image_rgb.shape[:2]
+        h_orig, w_orig = image_rgb.shape[:2]
 
-        # For small images, run standard padded forward pass
+        # Ensure image is at least patch_size in both dimensions via symmetric reflection padding
+        pad_h = max(0, patch_size - h_orig)
+        pad_w = max(0, patch_size - w_orig)
+        if pad_h > 0 or pad_w > 0:
+            padded_img = cv2.copyMakeBorder(image_rgb, 0, pad_h, 0, pad_w, cv2.BORDER_REFLECT)
+        else:
+            padded_img = image_rgb
+
+        h, w = padded_img.shape[:2]
+
+        # For small images (already padded if needed), run standard forward pass
         if h <= patch_size and w <= patch_size:
-            pad_h = patch_size - h
-            pad_w = patch_size - w
-            padded = cv2.copyMakeBorder(image_rgb, 0, pad_h, 0, pad_w, cv2.BORDER_REFLECT)
-            tensor_in = torch.from_numpy(padded.astype(np.float32) / 255.0).permute(2, 0, 1).unsqueeze(0).to(self.device)
+            tensor_in = torch.from_numpy(padded_img.astype(np.float32) / 255.0).permute(2, 0, 1).unsqueeze(0).to(self.device)
             with torch.no_grad():
                 out_t = model(tensor_in)
             out_np = (torch.clamp(out_t[0], 0.0, 1.0).permute(1, 2, 0).cpu().numpy() * 255.0).astype(np.uint8)
-            return out_np[:h, :w]
+            return out_np[:h_orig, :w_orig]
 
         # 2D Hann window for smooth multi-patch blending
         y_win = np.hanning(patch_size)
@@ -316,9 +323,7 @@ class HeritageRestorer:
 
         for y in y_steps:
             for x in x_steps:
-                patch = image_rgb[y:y+patch_size, x:x+patch_size]
-                if patch.shape[0] != patch_size or patch.shape[1] != patch_size:
-                    patch = cv2.resize(patch, (patch_size, patch_size))
+                patch = padded_img[y:y+patch_size, x:x+patch_size]
                 patch_tensor = torch.from_numpy(patch.astype(np.float32) / 255.0).permute(2, 0, 1).unsqueeze(0).to(self.device)
                 with torch.no_grad():
                     patch_out = model(patch_tensor)
@@ -328,7 +333,7 @@ class HeritageRestorer:
                 weight_canvas[y:y+patch_size, x:x+patch_size] += blend_weight
 
         blended = np.clip(canvas / weight_canvas, 0, 255).astype(np.uint8)
-        return blended
+        return blended[:h_orig, :w_orig]
 
     def restore_image(self, image_input, ground_truth_path=None, run_ocr=True, target_lang="en", model_name="best", domain="palm_leaf"):
         """
@@ -366,22 +371,13 @@ class HeritageRestorer:
 
         h_orig, w_orig = image_rgb.shape[:2]
 
-        # Cloud safety: cap massive camera uploads (e.g. 4000x3000) to max 1024px to prevent RAM exhaustion
-        if max(h_orig, w_orig) > 1024:
-            scale_orig = 1024.0 / max(h_orig, w_orig)
+        # Cap massive multi-megapixel camera uploads (e.g. 4000x3000) to max 1400px for speed and memory safety
+        if max(h_orig, w_orig) > 1400:
+            scale_orig = 1400.0 / max(h_orig, w_orig)
             image_rgb = cv2.resize(image_rgb, (max(16, int(w_orig * scale_orig)), max(16, int(h_orig * scale_orig))), interpolation=cv2.INTER_AREA)
             h_orig, w_orig = image_rgb.shape[:2]
 
-        # Neural working resolution:
-        # 256px on CPU guarantees Restormer finishes in ~1.2s and uses <35MB RAM,
-        # staying strictly within Render's 512MB RAM ceiling and eliminating OOM 502 errors.
-        max_work_dim = 256 if self.device.type == "cpu" else 512
-        if max(h_orig, w_orig) > max_work_dim:
-            scale = float(max_work_dim) / max(h_orig, w_orig)
-            working_rgb = cv2.resize(image_rgb, (max(16, int(w_orig * scale)), max(16, int(h_orig * scale))), interpolation=cv2.INTER_AREA)
-        else:
-            working_rgb = image_rgb.copy()
-
+        working_rgb = image_rgb.copy()
         h, w = working_rgb.shape[:2]
 
         # 2. Determine target domain
@@ -405,7 +401,7 @@ class HeritageRestorer:
                     out_tensor = model(norm_tensor)
                 out_np = (torch.clamp(out_tensor[0], 0.0, 1.0).permute(1, 2, 0).cpu().numpy() * 255.0).astype(np.uint8)
                 restored_raw = out_np[:h, :w]
-            elif max(h, w) <= max_work_dim:
+            elif max(h, w) <= 384:
                 pad_h = (16 - (h % 16)) % 16
                 pad_w = (16 - (w % 16)) % 16
                 padded = cv2.copyMakeBorder(working_rgb, 0, pad_h, 0, pad_w, cv2.BORDER_REFLECT)

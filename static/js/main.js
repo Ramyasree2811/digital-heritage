@@ -230,15 +230,19 @@ function selectSampleDocument(type) {
     if (type === 'sanskrit') {
         selectedSamplePath = '/static/images/warm/hero_manuscript.png';
         if (previewImg) previewImg.src = selectedSamplePath;
-        if (previewName) previewName.textContent = 'Ancient_Sanskrit_Manuscript.png';
+        if (previewName) previewName.textContent = 'Rigvedic_Samhita_Folio.png';
     } else if (type === 'palmleaf') {
         selectedSamplePath = '/static/images/warm/thumb_1.png';
         if (previewImg) previewImg.src = selectedSamplePath;
-        if (previewName) previewName.textContent = 'Palm_Leaf_Scriptural_Folio.jpg';
+        if (previewName) previewName.textContent = 'Tanjore_Grantha_Palm_Leaf.png';
     } else if (type === 'stone') {
         selectedSamplePath = '/static/images/warm/thumb_2.png';
         if (previewImg) previewImg.src = selectedSamplePath;
-        if (previewName) previewName.textContent = 'Grantha_Stone_Inscription.png';
+        if (previewName) previewName.textContent = 'Ashokan_Rock_Edict_Inscription.png';
+    } else if (type === 'copper') {
+        selectedSamplePath = '/static/images/warm/thumb_0.png';
+        if (previewImg) previewImg.src = selectedSamplePath;
+        if (previewName) previewName.textContent = 'Royal_Copper_Plate_Grant.png';
     }
 
     if (previewBox) previewBox.style.display = 'block';
