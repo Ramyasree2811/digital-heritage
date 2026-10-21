@@ -33,7 +33,7 @@ def get_ocr_reader():
         init_ocr()
     return ocr_reader
 
-def preprocess_image_for_ocr(image, max_dim=800):
+def preprocess_image_for_ocr(image, max_dim=512):
     """
     Optimizes heritage image for fast, robust character detection.
     Prevents downscaling wide palm-leaf banners which would shrink character height too much.
@@ -90,7 +90,7 @@ def extract_text_from_heritage(image):
             "link_threshold": 0.25,
             "slope_ths": 0.2,
             "mag_ratio": 1.0,
-            "canvas_size": 800
+            "canvas_size": 512
         }
         import gc
         gc.collect()
@@ -105,76 +105,17 @@ def extract_text_from_heritage(image):
             pass
 
         # -------------------------------------------------------------
-        # PASS 2: Morphological Background Subtraction & Division
-        # Cancels out dark palm-leaf wood grain, yellowing, and stains
+        # PASS 2: Adaptive CLAHE Enhancement (Fast fallback for faint ink/relief)
         # -------------------------------------------------------------
         if not extracted_lines:
             try:
                 gray = cv2.cvtColor(ocr_input, cv2.COLOR_RGB2GRAY) if len(ocr_input.shape) == 3 else ocr_input
-                h, w = gray.shape[:2]
-                k_size = min(35, max(15, (min(h, w) // 10) | 1))
-                kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (k_size, k_size))
-                bg = cv2.morphologyEx(gray, cv2.MORPH_DILATE, kernel)
-                bg = cv2.medianBlur(bg, max(15, (k_size // 2) * 2 + 1))
-                
-                # Division normalization: (I / bg) * 240
-                norm_gray = np.clip((gray.astype(np.float32) / (bg.astype(np.float32) + 1e-4)) * 240.0, 0, 255).astype(np.uint8)
-                
-                # Sharpen character ink edges
                 clahe = cv2.createCLAHE(clipLimit=2.5, tileGridSize=(8, 8))
-                enhanced_gray = clahe.apply(norm_gray)
+                enhanced_gray = clahe.apply(gray)
                 enhanced_rgb = cv2.cvtColor(enhanced_gray, cv2.COLOR_GRAY2RGB)
                 
                 results_norm = reader.readtext(enhanced_rgb, **ocr_kwargs)
                 extracted_lines = _collect_readtext_lines(results_norm)
-            except Exception:
-                pass
-
-        # -------------------------------------------------------------
-        # PASS 3: Adaptive Gaussian Thresholding
-        # Ideal for faded ink strokes on non-uniform manuscript parchment
-        # -------------------------------------------------------------
-        if not extracted_lines:
-            try:
-                gray = cv2.cvtColor(ocr_input, cv2.COLOR_RGB2GRAY) if len(ocr_input.shape) == 3 else ocr_input
-                blurred = cv2.GaussianBlur(gray, (3, 3), 0)
-                adaptive_bin = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-                                                     cv2.THRESH_BINARY, 25, 11)
-                bin_rgb = cv2.cvtColor(adaptive_bin, cv2.COLOR_GRAY2RGB)
-                results_adapt = reader.readtext(bin_rgb, **ocr_kwargs)
-                extracted_lines = _collect_readtext_lines(results_adapt)
-            except Exception:
-                pass
-
-        # -------------------------------------------------------------
-        # PASS 4: Inverted Polarity Handling
-        # In carved stone inscriptions or incised palm-leaf styluses,
-        # the engraved stroke is often brighter than the dark groove.
-        # -------------------------------------------------------------
-        if not extracted_lines:
-            try:
-                gray = cv2.cvtColor(ocr_input, cv2.COLOR_RGB2GRAY) if len(ocr_input.shape) == 3 else ocr_input
-                inv_gray = cv2.bitwise_not(gray)
-                clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))
-                inv_enhanced = clahe.apply(inv_gray)
-                inv_rgb = cv2.cvtColor(inv_enhanced, cv2.COLOR_GRAY2RGB)
-                results_inv = reader.readtext(inv_rgb, **ocr_kwargs)
-                extracted_lines = _collect_readtext_lines(results_inv)
-            except Exception:
-                pass
-
-        # -------------------------------------------------------------
-        # PASS 5: Otsu Binarization (Fallback)
-        # -------------------------------------------------------------
-        if not extracted_lines:
-            try:
-                gray = cv2.cvtColor(ocr_input, cv2.COLOR_RGB2GRAY) if len(ocr_input.shape) == 3 else ocr_input
-                _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-                if np.mean(thresh) < 127:
-                    thresh = cv2.bitwise_not(thresh)
-                bin_rgb = cv2.cvtColor(thresh, cv2.COLOR_GRAY2RGB)
-                results_bin = reader.readtext(bin_rgb, **ocr_kwargs)
-                extracted_lines = _collect_readtext_lines(results_bin)
             except Exception:
                 pass
 

@@ -30,7 +30,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu && \
     pip install --no-cache-dir -r requirements.txt && \
-    python -c "import easyocr; easyocr.Reader(['hi', 'en'], gpu=False, verbose=False)"
+    python -c "import easyocr; easyocr.Reader(['hi', 'en'], gpu=False, verbose=False)" || true
 
 # Copy application source code and models
 COPY . /app

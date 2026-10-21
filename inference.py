@@ -344,9 +344,11 @@ class HeritageRestorer:
 
         h_orig, w_orig = image_rgb.shape[:2]
 
-        # Downscale extreme megapixel images to max 1600px for speed and memory protection
-        if max(h_orig, w_orig) > 1600:
-            scale = 1600.0 / max(h_orig, w_orig)
+        # Cloud/CPU deployment speed and memory protection:
+        # Cap working resolution to 512px on CPU so neural restoration completes in seconds
+        max_work_dim = 512 if self.device.type == "cpu" else 1024
+        if max(h_orig, w_orig) > max_work_dim:
+            scale = float(max_work_dim) / max(h_orig, w_orig)
             working_rgb = cv2.resize(image_rgb, (int(w_orig * scale), int(h_orig * scale)), interpolation=cv2.INTER_AREA)
         else:
             working_rgb = image_rgb.copy()
@@ -372,8 +374,8 @@ class HeritageRestorer:
                 out_tensor = model(norm_tensor)
             out_np = (torch.clamp(out_tensor[0], 0.0, 1.0).permute(1, 2, 0).cpu().numpy() * 255.0).astype(np.uint8)
             restored_raw = out_np[:h, :w]
-        elif max(h, w) <= 384:
-            # Single forward pass for small/medium documents
+        elif max(h, w) <= 512:
+            # Single forward pass for documents up to 512px (instantaneous on CPU)
             pad_h = (16 - (h % 16)) % 16
             pad_w = (16 - (w % 16)) % 16
             padded = cv2.copyMakeBorder(working_rgb, 0, pad_h, 0, pad_w, cv2.BORDER_REFLECT)
