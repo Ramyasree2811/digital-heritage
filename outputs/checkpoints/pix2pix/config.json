@@ -1,0 +1,8 @@
+{
+    "model_name": "Pix2Pix",
+    "epochs": 2,
+    "batch_size": 8,
+    "lr": 0.0002,
+    "lambda_pixel": 100.0,
+    "val_psnr": 10.22
+}

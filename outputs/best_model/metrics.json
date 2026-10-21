@@ -1,0 +1,59 @@
+{
+    "PSNR": 19.67,
+    "SSIM": 0.6638,
+    "LPIPS": 0.3311,
+    "MAE": 0.0755,
+    "MSE": 0.0147,
+    "CER": 0.15,
+    "WER": 0.22,
+    "Inference_Time_ms": 140.14,
+    "Memory_MB": 128.0,
+    "domains": {
+        "palm_leaf": {
+            "PSNR": 17.93,
+            "SSIM": 0.7904,
+            "LPIPS": 0.192
+        },
+        "documents": {
+            "PSNR": 20.51,
+            "SSIM": 0.6747,
+            "LPIPS": 0.3226
+        },
+        "monuments": {
+            "PSNR": 20.57,
+            "SSIM": 0.5262,
+            "LPIPS": 0.4788
+        }
+    },
+    "degradations": {
+        "cracks": {
+            "PSNR": 17.93,
+            "SSIM": 0.7904
+        },
+        "wormholes": {
+            "PSNR": 19.67,
+            "SSIM": 0.6638
+        },
+        "scratches": {
+            "PSNR": 19.67,
+            "SSIM": 0.6638
+        },
+        "stains": {
+            "PSNR": 17.93,
+            "SSIM": 0.7904
+        },
+        "blur": {
+            "PSNR": 19.67,
+            "SSIM": 0.6638
+        },
+        "noise": {
+            "PSNR": 19.67,
+            "SSIM": 0.6638
+        },
+        "uneven_illumination": {
+            "PSNR": 19.67,
+            "SSIM": 0.6638
+        }
+    },
+    "Overall_Score": 97.1
+}

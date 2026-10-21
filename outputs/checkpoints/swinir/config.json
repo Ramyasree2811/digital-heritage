@@ -1,0 +1,9 @@
+{
+    "model_name": "SwinIR",
+    "epochs": 2,
+    "batch_size": 8,
+    "lr": 0.0001,
+    "channels": 32,
+    "img_size": 256,
+    "val_psnr": 17.84
+}

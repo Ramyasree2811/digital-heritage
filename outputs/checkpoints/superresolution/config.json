@@ -1,0 +1,9 @@
+{
+    "model_name": "SuperResolution",
+    "scale_factor": 2,
+    "epochs": 2,
+    "batch_size": 8,
+    "lr": 0.0002,
+    "num_features": 32,
+    "val_psnr": 13.05
+}

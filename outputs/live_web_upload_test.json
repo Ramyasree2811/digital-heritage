@@ -1,0 +1,13 @@
+{
+  "domain": "palm_leaf",
+  "extracted_text": "एष वा अस्मिँस्तिस्रो वाजपेयेन युज्यन्ते ॥",
+  "high_res_url": "/static/outputs/3228b1e4-664d-40b9-ba1e-345a5b74ca01_high_res.png",
+  "mask_url": "/static/outputs/3228b1e4-664d-40b9-ba1e-345a5b74ca01_damage_mask.png",
+  "model_used": "best",
+  "original_url": "/static/uploads/3228b1e4-664d-40b9-ba1e-345a5b74ca01.png",
+  "processing_time": 12.21,
+  "restored_url": "/static/outputs/3228b1e4-664d-40b9-ba1e-345a5b74ca01_restored.png",
+  "run_id": "3228b1e4-664d-40b9-ba1e-345a5b74ca01",
+  "success": true,
+  "translated_text": "These three indeed are yoked for him in the Vajapeya ritual."
+}

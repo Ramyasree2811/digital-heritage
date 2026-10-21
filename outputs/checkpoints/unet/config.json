@@ -1,0 +1,7 @@
+{
+    "model_name": "UNet",
+    "epochs": 2,
+    "batch_size": 8,
+    "lr": 0.0001,
+    "val_psnr": 9.57
+}

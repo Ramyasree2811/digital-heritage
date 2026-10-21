@@ -1,0 +1,10 @@
+{
+    "python_version": "3.13.5 (tags/v3.13.5:6cb20a2, Jun 11 2025, 16:15:46) [MSC v.1943 64 bit (AMD64)]",
+    "torch_version": "2.13.0+cpu",
+    "cuda_available": false,
+    "cuda_version": null,
+    "device": "cpu",
+    "random_seed": 42,
+    "date": "2026-09-04 21:16:11",
+    "workspace": "C:\\Users\\DELL\\OneDrive\\Desktop\\digital"
+}

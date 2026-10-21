@@ -1,0 +1,40 @@
+# Bytecode and Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Large Datasets
+dataset/
+
+# Non-production evaluation artifacts & plots
+results/
+outputs/pipeline/
+outputs/plots/
+outputs/results/
+
+# Intermediate checkpoints (only best weights needed for app)
+outputs/checkpoints/*/latest*.pth
+outputs/checkpoints/*/*discriminator*.pth
+outputs/checkpoints/*/plots/
+outputs/checkpoints/*/training_history.csv
+
+# User uploads and generated run files
+static/uploads/*
+!static/uploads/.gitkeep
+static/outputs/*
+!static/outputs/.gitkeep
+
+# IDE / System
+.vscode/
+.idea/
+*.log
+.DS_Store
+Thumbs.db

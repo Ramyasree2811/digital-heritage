@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing Restoration...</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="processing-body">
+    <div class="processing-container card">
+        <div class="processing-header">
+            <h2>Processing</h2>
+            <p>Please wait while we restore your document...</p>
+        </div>
+
+        <!-- Scanning Line Animation -->
+        <div class="scanner-container">
+            <div class="scanner-image-wrapper">
+                <div class="scanner-line"></div>
+                <img src="/static/css/images/parchment_texture.jpg" id="scanner-bg" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'150\'><rect width=\'300\' height=\'150\' fill=\'%23e5cbb2\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-size=\'14\' fill=\'%23705030\'>Restoring Manuscript...</text></svg>'" alt="Restoring...">
+            </div>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="progress-steps">
+            <div class="step-item" id="step-preprocess">
+                <i class="fa-solid fa-spinner fa-spin step-status-icon"></i>
+                <span>Preprocessing Image</span>
+            </div>
+            
+            <div class="step-item" id="step-detect">
+                <i class="fa-regular fa-circle step-status-icon"></i>
+                <span>Detecting Damage</span>
+            </div>
+            
+            <div class="step-item" id="step-restore">
+                <i class="fa-regular fa-circle step-status-icon"></i>
+                <span>Restoring Image</span>
+            </div>
+            
+            <div class="step-item" id="step-ocr">
+                <i class="fa-regular fa-circle step-status-icon"></i>
+                <span>Running OCR & Translation</span>
+            </div>
+            
+            <div class="step-item" id="step-done">
+                <i class="fa-regular fa-circle step-status-icon"></i>
+                <span>Almost Done...</span>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progress-fill" style="width: 0%;"></div>
+        </div>
+        <p class="progress-pct" id="progress-pct">0%</p>
+
+        <div class="processing-footer">
+            <p>This may take a few moments.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const runId = "{{ run_id }}";
+            const eventSource = new EventSource("/process_status/" + runId);
+            
+            const progressFill = document.getElementById("progress-fill");
+            const progressPct = document.getElementById("progress-pct");
+            
+            const steps = {
+                "Preprocessing Image": document.getElementById("step-preprocess"),
+                "Detecting Damage": document.getElementById("step-detect"),
+                "Restoring Image": document.getElementById("step-restore"),
+                "Running OCR": document.getElementById("step-ocr"),
+                "Almost Done": document.getElementById("step-done")
+            };
+            
+            function setStepActive(activeStepName) {
+                // Mark previous steps as completed, current as active, future as pending
+                let foundActive = false;
+                for (const [name, element] of Object.entries(steps)) {
+                    const icon = element.querySelector(".step-status-icon");
+                    
+                    if (name === activeStepName) {
+                        foundActive = true;
+                        element.className = "step-item active";
+                        icon.className = "fa-solid fa-spinner fa-spin step-status-icon";
+                    } else if (!foundActive) {
+                        element.className = "step-item completed";
+                        icon.className = "fa-solid fa-circle-check step-status-icon";
+                    } else {
+                        element.className = "step-item";
+                        icon.className = "fa-regular fa-circle step-status-icon";
+                    }
+                }
+            }
+            
+            eventSource.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                
+                if (data.error) {
+                    alert("Error: " + data.error);
+                    eventSource.close();
+                    window.location.href = "/";
+                    return;
+                }
+                
+                // Update progress bar
+                const progress = data.progress;
+                progressFill.style.width = progress + "%";
+                progressPct.innerText = progress + "%";
+                
+                // Set step active
+                let activeStep = "";
+                if (progress >= 10 && progress < 30) activeStep = "Preprocessing Image";
+                else if (progress >= 30 && progress < 50) activeStep = "Detecting Damage";
+                else if (progress >= 50 && progress < 70) activeStep = "Restoring Image";
+                else if (progress >= 70 && progress < 95) activeStep = "Running OCR";
+                else if (progress >= 95) activeStep = "Almost Done";
+                
+                setStepActive(activeStep);
+                
+                // Redirect if completed
+                if (data.redirect) {
+                    eventSource.close();
+                    window.location.href = data.redirect;
+                }
+            };
+            
+            eventSource.onerror = function() {
+                console.error("EventSource failed.");
+                eventSource.close();
+            };
+        });
+    </script>
+</body>
+</html>

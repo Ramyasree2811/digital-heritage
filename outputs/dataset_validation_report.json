@@ -1,0 +1,79 @@
+{
+    "status": "PASS",
+    "timestamp": "2026-09-04T20:09:51.481145",
+    "summary": {
+        "total_split_samples": 3000,
+        "train_samples": 2100,
+        "validation_samples": 450,
+        "test_samples": 450,
+        "total_errors": 0,
+        "integrity_passed": true
+    },
+    "splits": {
+        "train": {
+            "metadata_count": 2100,
+            "clean_count": 2100,
+            "degraded_count": 2100,
+            "masks_count": 2100,
+            "domains": {
+                "monuments": 700,
+                "documents": 700,
+                "palm_leaf": 700
+            }
+        },
+        "validation": {
+            "metadata_count": 450,
+            "clean_count": 450,
+            "degraded_count": 450,
+            "masks_count": 450,
+            "domains": {
+                "monuments": 150,
+                "documents": 150,
+                "palm_leaf": 150
+            }
+        },
+        "test": {
+            "metadata_count": 450,
+            "clean_count": 450,
+            "degraded_count": 450,
+            "masks_count": 450,
+            "domains": {
+                "monuments": 150,
+                "documents": 150,
+                "palm_leaf": 150
+            }
+        }
+    },
+    "domains": {
+        "palm_leaf": {
+            "original": 1000,
+            "degraded": 1000,
+            "masks": 1000
+        },
+        "documents": {
+            "original": 1000,
+            "degraded": 1000,
+            "masks": 1000
+        },
+        "monuments": {
+            "original": 1000,
+            "degraded": 1000,
+            "masks": 1000
+        }
+    },
+    "integrity_checks": {
+        "missing_files": 0,
+        "corrupted_files": 0,
+        "dimension_mismatches": 0,
+        "channel_mismatches": 0,
+        "clean_degraded_mismatches": 0,
+        "mask_mismatches": 0,
+        "duplicate_clean_in_train": 184,
+        "duplicate_clean_in_validation": 10,
+        "duplicate_clean_in_test": 11,
+        "leakage_train_to_val": 39,
+        "leakage_train_to_test": 51,
+        "leakage_val_to_test": 18
+    },
+    "errors": []
+}

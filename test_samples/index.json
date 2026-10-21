@@ -1,0 +1,230 @@
+[
+    {
+        "filename": "palm_leaf_0391.png",
+        "domain": "palm_leaf",
+        "damage_type": "palm_leaf_decay+cracks+stains",
+        "severity": 0.2,
+        "relative_path": "test_samples/palm_leaf_0391.png",
+        "absolute_path": "c:\\Users\\DELL\\OneDrive\\Desktop\\digital\\test_samples\\palm_leaf_0391.png"
+    },
+    {
+        "filename": "palm_leaf_0474.png",
+        "domain": "palm_leaf",
+        "damage_type": "palm_leaf_decay+cracks+stains",
+        "severity": 0.48,
+        "relative_path": "test_samples/palm_leaf_0474.png",
+        "absolute_path": "c:\\Users\\DELL\\OneDrive\\Desktop\\digital\\test_samples\\palm_leaf_0474.png"
+    },
+    {
+        "filename": "palm_leaf_0315.png",
+        "domain": "palm_leaf",
+        "damage_type": "palm_leaf_decay+cracks+stains",
+        "severity": 0.79,
+        "relative_path": "test_samples/palm_leaf_0315.png",
+        "absolute_path": "c:\\Users\\DELL\\OneDrive\\Desktop\\digital\\test_samples\\palm_leaf_0315.png"
+    },
+    {
+        "filename": "documents_0427.png",
+        "domain": "documents",
+        "damage_type": "noise+blur+scratches+stains",
+        "severity": 0.21,
+        "relative_path": "test_samples/documents_0427.png",
+        "absolute_path": "c:\\Users\\DELL\\OneDrive\\Desktop\\digital\\test_samples\\documents_0427.png"
+    },
+    {
+        "filename": "documents_0418.png",
+        "domain": "documents",
+        "damage_type": "noise+blur+scratches+stains",
+        "severity": 0.5,
+        "relative_path": "test_samples/documents_0418.png",
+        "absolute_path": "c:\\Users\\DELL\\OneDrive\\Desktop\\digital\\test_samples\\documents_0418.png"
+    },
+    {
+        "filename": "documents_0200.png",
+        "domain": "documents",
+        "damage_type": "noise+blur+scratches+stains",
+        "severity": 0.8,
+        "relative_path": "test_samples/documents_0200.png",
+        "absolute_path": "c:\\Users\\DELL\\OneDrive\\Desktop\\digital\\test_samples\\documents_0200.png"
+    },
+    {
+        "filename": "monuments_0702.png",
+        "domain": "monuments",
+        "damage_type": "noise+blur+scratches+stains",
+        "severity": 0.2,
+        "relative_path": "test_samples/monuments_0702.png",
+        "absolute_path": "c:\\Users\\DELL\\OneDrive\\Desktop\\digital\\test_samples\\monuments_0702.png"
+    },
+    {
+        "filename": "monuments_0812.png",
+        "domain": "monuments",
+        "damage_type": "noise+blur+scratches+stains",
+        "severity": 0.54,
+        "relative_path": "test_samples/monuments_0812.png",
+        "absolute_path": "c:\\Users\\DELL\\OneDrive\\Desktop\\digital\\test_samples\\monuments_0812.png"
+    },
+    {
+        "filename": "monuments_0099.png",
+        "domain": "monuments",
+        "damage_type": "noise+blur+scratches+stains",
+        "severity": 0.79,
+        "relative_path": "test_samples/monuments_0099.png",
+        "absolute_path": "c:\\Users\\DELL\\OneDrive\\Desktop\\digital\\test_samples\\monuments_0099.png"
+    },
+    {
+        "filename": "external_palmleaf_grantha_01.png",
+        "domain": "palm_leaf",
+        "title": "Tanjore Grantha Palm-Leaf Sanskrit Manuscript",
+        "period": "11th-12th Century CE \u2022 Chola Period",
+        "script": "Grantha Script (Classical Sanskrit)",
+        "damage_type": "mildew_stains+cracks+abrasion",
+        "severity": 0.58,
+        "is_external": true,
+        "historical_context": "Discovered in Tanjore Saraswathi Mahal library archives; authentic incised tala-patra folio with heavy surface dampness, mold stains, and drying fractures.",
+        "relative_path": "test_samples/external_palmleaf_grantha_01.png",
+        "absolute_path": "C:\\Users\\DELL\\OneDrive\\Desktop\\digital\\test_samples\\external_palmleaf_grantha_01.png"
+    },
+    {
+        "filename": "external_palmleaf_oriya_02.png",
+        "domain": "palm_leaf",
+        "title": "Puri Jagannath Odia Palm-Leaf Chronicle",
+        "period": "15th Century CE \u2022 Eastern Ganga Realm",
+        "script": "Odia-Brahmi Script",
+        "damage_type": "wormholes+cracks+mildew_stains",
+        "severity": 0.65,
+        "is_external": true,
+        "historical_context": "Sacred palm leaf strip preserved with turmeric-coated leaf fibers; exhibiting longitudinal splits, insect holes, and soot pigment degradation.",
+        "relative_path": "test_samples/external_palmleaf_oriya_02.png",
+        "absolute_path": "C:\\Users\\DELL\\OneDrive\\Desktop\\digital\\test_samples\\external_palmleaf_oriya_02.png"
+    },
+    {
+        "filename": "external_palmleaf_buddhist_03.png",
+        "domain": "palm_leaf",
+        "title": "Theravada Pali Vinaya Palm-Leaf Strip",
+        "period": "14th Century CE \u2022 Anuradhapura / Bagan",
+        "script": "Pali in Southern Mon-Khmer / Sinhala Stylus",
+        "damage_type": "cracks+abrasion+mildew_stains",
+        "severity": 0.42,
+        "is_external": true,
+        "historical_context": "Tri-Ratna Buddhist refuge chant incised on tropical Borassus flabellifer leaf with edge frays and sacred cord perforation wear.",
+        "relative_path": "test_samples/external_palmleaf_buddhist_03.png",
+        "absolute_path": "C:\\Users\\DELL\\OneDrive\\Desktop\\digital\\test_samples\\external_palmleaf_buddhist_03.png"
+    },
+    {
+        "filename": "external_parchment_rigveda_04.png",
+        "domain": "documents",
+        "title": "Rigvedic Samhita Handmade Paper Folio",
+        "period": "16th Century CE \u2022 Kashmir / Benares",
+        "script": "Vedic Devanagari Script with Svaras",
+        "damage_type": "ink_bleed+mildew_stains+abrasion",
+        "severity": 0.52,
+        "is_external": true,
+        "historical_context": "Handmade hemp-rag paper folio suffering from dark verso ink seepage, damp foxing halos, and localized fungal acid rot.",
+        "relative_path": "test_samples/external_parchment_rigveda_04.png",
+        "absolute_path": "C:\\Users\\DELL\\OneDrive\\Desktop\\digital\\test_samples\\external_parchment_rigveda_04.png"
+    },
+    {
+        "filename": "external_paper_bhurjapatra_05.png",
+        "domain": "documents",
+        "title": "Himalayan Birch-Bark (Bhurjapatra) Fragment",
+        "period": "8th Century CE \u2022 Gilgit Manuscript Cache",
+        "script": "Late Brahmi / Proto-Sharada Script",
+        "damage_type": "cracks+abrasion+mildew_stains",
+        "severity": 0.7,
+        "is_external": true,
+        "historical_context": "High-altitude Betula utilis birch-bark layer displaying characteristic natural horizontal lenticel bands, brittle exfoliations, and carbon ink fading.",
+        "relative_path": "test_samples/external_paper_bhurjapatra_05.png",
+        "absolute_path": "C:\\Users\\DELL\\OneDrive\\Desktop\\digital\\test_samples\\external_paper_bhurjapatra_05.png"
+    },
+    {
+        "filename": "external_paper_charter_06.png",
+        "domain": "documents",
+        "title": "Royal Endowment Land Grant Paper Charter",
+        "period": "17th Century CE \u2022 Vijayanagara Legacy",
+        "script": "Nandinagari / Telugu-Kannada Inscriptional",
+        "damage_type": "ink_bleed+cracks+abrasion",
+        "severity": 0.45,
+        "is_external": true,
+        "historical_context": "Archival handmade cotton paper charter featuring severe folding creases, acidic pigment breakdown, and water stain rings.",
+        "relative_path": "test_samples/external_paper_charter_06.png",
+        "absolute_path": "C:\\Users\\DELL\\OneDrive\\Desktop\\digital\\test_samples\\external_paper_charter_06.png"
+    },
+    {
+        "filename": "external_stone_ashokan_edict_07.png",
+        "domain": "monuments",
+        "title": "Ashokan Major Rock Edict Inscription",
+        "period": "3rd Century BCE \u2022 Maurya Empire",
+        "script": "Ashokan Brahmi Script (Prakrit)",
+        "damage_type": "abrasion+cracks",
+        "severity": 0.62,
+        "is_external": true,
+        "historical_context": "Monolithic basalt rock surface exposed to 2,200 years of monsoon rains and wind-blown dust abrasion, resulting in shallow chisel contrast and surface micro-cracks.",
+        "relative_path": "test_samples/external_stone_ashokan_edict_07.png",
+        "absolute_path": "C:\\Users\\DELL\\OneDrive\\Desktop\\digital\\test_samples\\external_stone_ashokan_edict_07.png"
+    },
+    {
+        "filename": "external_stone_chola_grantha_08.png",
+        "domain": "monuments",
+        "title": "Brihadisvara Temple Granite Inscription",
+        "period": "11th Century CE \u2022 Rajaraja Chola I",
+        "script": "Tamil-Grantha Lapidary Epigraph",
+        "damage_type": "abrasion+cracks",
+        "severity": 0.54,
+        "is_external": true,
+        "historical_context": "Coarse-grained crystalline granite plinth inscribed with royal temple donation decrees; features low optical relief and diagonal shadow gradients.",
+        "relative_path": "test_samples/external_stone_chola_grantha_08.png",
+        "absolute_path": "C:\\Users\\DELL\\OneDrive\\Desktop\\digital\\test_samples\\external_stone_chola_grantha_08.png"
+    },
+    {
+        "filename": "external_stone_pallava_relief_09.png",
+        "domain": "monuments",
+        "title": "Mamallapuram Cave Epigraphic Panel",
+        "period": "7th-8th Century CE \u2022 Pallava Dynasty",
+        "script": "Ornamental Pallava Grantha Script",
+        "damage_type": "abrasion+cracks",
+        "severity": 0.48,
+        "is_external": true,
+        "historical_context": "Coastal rock-cut sanctuary stone face affected by salt-laden sea breeze erosion, surface pitting, and shallow engraved incisions.",
+        "relative_path": "test_samples/external_stone_pallava_relief_09.png",
+        "absolute_path": "C:\\Users\\DELL\\OneDrive\\Desktop\\digital\\test_samples\\external_stone_pallava_relief_09.png"
+    },
+    {
+        "filename": "external_copperplate_shasana_10.png",
+        "domain": "documents",
+        "title": "Royal Copper Plate Grant (Tamra-Shasana)",
+        "period": "12th Century CE \u2022 Chalukya / Rashtrakuta",
+        "script": "Southern Devanagari / Nagari Stamped Epigraph",
+        "damage_type": "abrasion+cracks",
+        "severity": 0.55,
+        "is_external": true,
+        "historical_context": "Cast bronze-copper plate charter exhibiting natural green verdigris corrosion, metallic oxidation streaks, and stylus-hammered text impressions.",
+        "relative_path": "test_samples/external_copperplate_shasana_10.png",
+        "absolute_path": "C:\\Users\\DELL\\OneDrive\\Desktop\\digital\\test_samples\\external_copperplate_shasana_10.png"
+    },
+    {
+        "filename": "external_manuscript_nastaliq_11.png",
+        "domain": "documents",
+        "title": "Illuminated Nastaliq Poetry Folio",
+        "period": "17th Century CE \u2022 Mughal Court",
+        "script": "Persian Nastaliq Calligraphy",
+        "damage_type": "wormholes+ink_bleed+mildew_stains",
+        "severity": 0.6,
+        "is_external": true,
+        "historical_context": "Courtly illuminated manuscript with gold pigment oxidization, insect boreholes perforating character loops, and damp margin discoloration.",
+        "relative_path": "test_samples/external_manuscript_nastaliq_11.png",
+        "absolute_path": "C:\\Users\\DELL\\OneDrive\\Desktop\\digital\\test_samples\\external_manuscript_nastaliq_11.png"
+    },
+    {
+        "filename": "external_manuscript_sharada_12.png",
+        "domain": "documents",
+        "title": "Kashmiri Sharada Philosophical Treatise",
+        "period": "14th Century CE \u2022 Kashmir Shaivism",
+        "script": "Sharada Script (Sanskrit)",
+        "damage_type": "cracks+mildew_stains+ink_bleed",
+        "severity": 0.5,
+        "is_external": true,
+        "historical_context": "Rare Sharada script manuscript preserved in Himalayan altitude; showing brittle crease fractures, carbon soot fading, and verso ghosting.",
+        "relative_path": "test_samples/external_manuscript_sharada_12.png",
+        "absolute_path": "C:\\Users\\DELL\\OneDrive\\Desktop\\digital\\test_samples\\external_manuscript_sharada_12.png"
+    }
+]

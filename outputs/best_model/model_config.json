@@ -1,0 +1,11 @@
+{
+    "model_name": "Restormer",
+    "key": "restormer",
+    "psnr": 19.16,
+    "ssim": 0.6419,
+    "mse": 0.0156,
+    "mae": 0.0651,
+    "latency": 610.7,
+    "composite_score": 100.0,
+    "selection_timestamp": "2026-09-18T21:06:37.901721"
+}

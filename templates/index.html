@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Restoration | Digital Heritage AI</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main Style -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="warm-parchment-theme">
+
+    <!-- Application Shell Container -->
+    <div class="app-shell" id="app-shell">
+
+        <!-- SLIDE-OUT DRAWER MENU (Screen 7) -->
+        <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+        <aside class="app-drawer" id="app-drawer">
+            <div class="drawer-header">
+                <div class="drawer-user-info">
+                    <div class="drawer-avatar">
+                        <i class="fa-solid fa-scroll"></i>
+                    </div>
+                    <div class="drawer-meta">
+                        <h3>Heritage Portal</h3>
+                        <p>Document Restoration AI</p>
+                    </div>
+                </div>
+                <button class="btn-drawer-close" onclick="closeDrawer()" title="Close menu">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <nav class="drawer-nav">
+                <a href="javascript:void(0)" class="drawer-link active" onclick="navigateTo('home'); closeDrawer();">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Home</span>
+                </a>
+                <a href="javascript:void(0)" class="drawer-link" onclick="navigateTo('upload'); closeDrawer();">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span>Upload Document</span>
+                </a>
+                <a href="javascript:void(0)" class="drawer-link" onclick="navigateTo('history'); closeDrawer();">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <span>History</span>
+                </a>
+                <a href="javascript:void(0)" class="drawer-link" onclick="navigateTo('translate'); closeDrawer();">
+                    <i class="fa-solid fa-language"></i>
+                    <span>Text &amp; Translation</span>
+                </a>
+                <a href="javascript:void(0)" class="drawer-link" onclick="openGalleryModal(); closeDrawer();">
+                    <i class="fa-solid fa-images"></i>
+                    <span>Sample Gallery</span>
+                </a>
+                <a href="javascript:void(0)" class="drawer-link" onclick="navigateTo('settings'); closeDrawer();">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Settings</span>
+                </a>
+                <div class="drawer-divider"></div>
+                <a href="javascript:void(0)" class="drawer-link" onclick="showHelpModal(); closeDrawer();">
+                    <i class="fa-solid fa-circle-question"></i>
+                    <span>Help &amp; Support</span>
+                </a>
+                <a href="javascript:void(0)" class="drawer-link" onclick="showAboutModal(); closeDrawer();">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>About Us</span>
+                </a>
+                <a href="javascript:void(0)" class="drawer-link logout-link" onclick="clearSessionData(); closeDrawer();">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    <span>Reset Workspace</span>
+                </a>
+            </nav>
+
+            <div class="drawer-footer">
+                <span>Version 1.0.0 (Production)</span>
+            </div>
+        </aside>
+
+        <!-- TOP APP BAR -->
+        <header class="app-topbar">
+            <div class="topbar-left">
+                <button class="topbar-btn" id="btn-open-drawer" onclick="openDrawer()" title="Open Navigation">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <button class="topbar-btn back-btn" id="btn-topbar-back" onclick="navigateBack()" title="Back" style="display:none;">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+            </div>
+            <div class="topbar-center">
+                <h1 class="topbar-title" id="topbar-title">🏛 DIGITAL HERITAGE RESTORATION</h1>
+                <p class="topbar-subtitle">Restore • Preserve • Read • Translate</p>
+            </div>
+            <div class="topbar-right">
+                <button class="topbar-btn" id="btn-notification" onclick="toggleNotificationBadge()" title="Notifications">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="notification-dot" id="notification-dot"></span>
+                </button>
+                <button class="topbar-btn btn-device-toggle" id="btn-device-toggle" onclick="toggleLayoutMode()" title="Toggle View Mode">
+                    <i class="fa-solid fa-mobile-screen"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- MAIN VIEW CONTAINER -->
+        <main class="app-content-container">
+
+            <!-- =========================================================
+                 SCREEN 1: HOME VIEW
+                 ========================================================= -->
+            <section class="app-view active" id="view-home">
+                
+                <!-- Hero Manuscript Carousel Card -->
+                <div class="hero-card-container">
+                    <div class="hero-card">
+                        <div class="hero-image-wrap">
+                            <img src="/static/images/warm/hero_manuscript.png" alt="Ancient Sanskrit Manuscript" class="hero-img" id="hero-img">
+                            <div class="hero-badge">Featured Artifact</div>
+                        </div>
+                        <div class="hero-card-info">
+                            <h2 class="hero-card-title">Ancient Sanskrit Manuscript</h2>
+                            <p class="hero-card-desc">Palm Leaf • 12th Century AD • Rigvedic Inscription</p>
+                            <div class="carousel-dots">
+                                <span class="dot active"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Primary CTA Button -->
+                <div class="primary-action-wrap">
+                    <button class="btn-espresso-primary" onclick="navigateTo('upload')">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span>Upload Document</span>
+                    </button>
+                </div>
+
+                <!-- Quick Actions Grid -->
+                <div class="section-block">
+                    <h3 class="section-label">Quick Actions</h3>
+                    <div class="quick-actions-grid">
+                        <div class="quick-action-card" onclick="startQuickAction('restore')">
+                            <div class="qa-icon-box qa-restore">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            </div>
+                            <span class="qa-title">Restore Image</span>
+                        </div>
+                        <div class="quick-action-card" onclick="startQuickAction('ocr')">
+                            <div class="qa-icon-box qa-ocr">
+                                <i class="fa-solid fa-file-lines"></i>
+                            </div>
+                            <span class="qa-title">Extract Text</span>
+                        </div>
+                        <div class="quick-action-card" onclick="navigateTo('translate')">
+                            <div class="qa-icon-box qa-translate">
+                                <i class="fa-solid fa-language"></i>
+                            </div>
+                            <span class="qa-title">Translate Text</span>
+                        </div>
+                        <div class="quick-action-card" onclick="navigateTo('history')">
+                            <div class="qa-icon-box qa-history">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                            </div>
+                            <span class="qa-title">History</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- About Document Restoration Card -->
+                <div class="about-card">
+                    <div class="about-card-icon">
+                        <i class="fa-solid fa-book-open-reader"></i>
+                    </div>
+                    <div class="about-card-content">
+                        <h4 class="about-card-title">About Document Restoration</h4>
+                        <p class="about-card-text">
+                            Our Generative AI archival engine removes aging stains, yellow foxing, ink fade, and torn background artifacts while preserving original handwritten Sanskrit, Devanagari, and Tamil letterforms with forensic precision.
+                        </p>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- =========================================================
+                 SCREEN 2: UPLOAD DOCUMENT VIEW
+                 ========================================================= -->
+            <section class="app-view" id="view-upload">
+                
+                <!-- Drag & Drop Upload Zone -->
+                <div class="upload-dropzone" id="upload-dropzone" onclick="triggerFileInput()">
+                    <input type="file" id="file-input" accept="image/*" style="display:none;" onchange="handleFileSelected(event)">
+                    <div class="dropzone-icon-circle">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+                    <h3 class="dropzone-heading">Drag &amp; drop your document here</h3>
+                    <p class="dropzone-sub">or <span class="browse-link">Browse Files</span></p>
+                    <span class="dropzone-meta">Supports JPG, PNG, WEBP up to 25MB</span>
+                    
+                    <!-- Selected File Preview (hidden initially) -->
+                    <div class="upload-preview-box" id="upload-preview-box" style="display:none;">
+                        <img id="upload-preview-img" src="" alt="Selected Preview">
+                        <div class="upload-preview-info">
+                            <span id="upload-preview-name">filename.jpg</span>
+                            <button type="button" class="btn-remove-preview" onclick="removeSelectedFile(event)">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Choose From Gallery / Preloaded Samples Button -->
+                <div class="gallery-action-wrap">
+                    <button class="btn-cream-outline" onclick="openGalleryModal()">
+                        <i class="fa-solid fa-images"></i>
+                        <span>Choose from Gallery / Samples</span>
+                    </button>
+                </div>
+
+                <!-- Tips for Better Results Card -->
+                <div class="tips-card">
+                    <h4 class="tips-title">
+                        <i class="fa-solid fa-circle-check tips-icon"></i>
+                        Tips for better results
+                    </h4>
+                    <ul class="tips-list">
+                        <li>
+                            <i class="fa-solid fa-check tip-check"></i>
+                            <span>Ensure good lighting and high resolution</span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-check tip-check"></i>
+                            <span>Avoid shadows, folds, and camera glare</span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-check tip-check"></i>
+                            <span>Keep document flat and text aligned horizontally</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Settings Bar for Upload -->
+                <div class="upload-options-card">
+                    <div class="option-row">
+                        <span class="option-label">Restoration Engine</span>
+                        <select id="model-select" class="custom-select">
+                            <option value="best" selected>Best Model (Auto-Selected)</option>
+                            <option value="DnCNN">DnCNN (Archival Fast Leveling)</option>
+                            <option value="U-Net">U-Net (Balanced Structural)</option>
+                            <option value="Restormer">Restormer (Transformer)</option>
+                            <option value="SwinIR">SwinIR (Hierarchical Vision)</option>
+                            <option value="Pix2Pix">Pix2Pix GAN</option>
+                        </select>
+                    </div>
+                    <div class="option-row">
+                        <span class="option-label">Extract Inscribed Text (OCR)</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="chk-ocr" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Upload & Restore Primary Action Button -->
+                <div class="upload-btn-wrap">
+                    <button type="button" class="btn-espresso-primary btn-restore-hero" id="btn-start-restore" onclick="startRestorationProcess()">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>RESTORE HERITAGE IMAGE</span>
+                    </button>
+                </div>
+
+            </section>
+
+            <!-- =========================================================
+                 SCREEN 3: PROCESSING VIEW (With Animated Laser Beam)
+                 ========================================================= -->
+            <section class="app-view" id="view-processing">
+                
+                <div class="processing-header">
+                    <h2 class="processing-title">Please wait while we restore your document...</h2>
+                    <p class="processing-sub">AI neural models are analyzing ink strokes and removing paper degradation.</p>
+                </div>
+
+                <!-- Document with Glowing Laser Scanner Animation -->
+                <div class="scanner-card-wrap">
+                    <div class="scanner-card">
+                        <img src="/static/images/warm/processing_manuscript.png" alt="Document Under Scan" class="scanner-manuscript-img" id="scanner-preview-img">
+                        
+                        <!-- Animated Laser Scanner Line -->
+                        <div class="laser-scanner-line" id="laser-line">
+                            <div class="laser-light-beam"></div>
+                        </div>
+
+                        <div class="scanner-overlay-badge">
+                            <i class="fa-solid fa-microchip pulse-icon"></i>
+                            <span id="scan-step-badge">Deep Neural Denoising</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Progress Checklist -->
+                <div class="processing-checklist">
+                    <div class="check-step done" id="step-1">
+                        <div class="step-icon"><i class="fa-solid fa-circle-check"></i></div>
+                        <span class="step-text">Preprocessing Document</span>
+                    </div>
+                    <div class="check-step in-progress" id="step-2">
+                        <div class="step-icon"><i class="fa-solid fa-circle-notch fa-spin"></i></div>
+                        <span class="step-text">Detecting Damage &amp; Foxing Stains</span>
+                    </div>
+                    <div class="check-step pending" id="step-3">
+                        <div class="step-icon"><i class="fa-regular fa-circle"></i></div>
+                        <span class="step-text">Restoring Image &amp; Leveling Illumination</span>
+                    </div>
+                    <div class="check-step pending" id="step-4">
+                        <div class="step-icon"><i class="fa-regular fa-circle"></i></div>
+                        <span class="step-text">Running Sanskrit / Devanagari OCR</span>
+                    </div>
+                    <div class="check-step pending" id="step-5">
+                        <div class="step-icon"><i class="fa-regular fa-circle"></i></div>
+                        <span class="step-text">Almost Done...</span>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- =========================================================
+                 SCREEN 4: RESTORATION RESULT VIEW
+                 ========================================================= -->
+            <section class="app-view" id="view-result">
+                
+                <!-- Comparison Controls -->
+                <div class="result-toggle-bar">
+                    <div class="segmented-control">
+                        <button class="seg-btn active" id="btn-tab-side" onclick="setResultDisplayMode('side')">Side-by-Side</button>
+                        <button class="seg-btn" id="btn-tab-split" onclick="setResultDisplayMode('split')">Split Slider</button>
+                        <button class="seg-btn" id="btn-tab-before" onclick="setResultDisplayMode('before')">Before</button>
+                        <button class="seg-btn" id="btn-tab-after" onclick="setResultDisplayMode('after')">After</button>
+                    </div>
+                    <div class="result-actions-pills">
+                        <button class="pill-btn" onclick="openComparisonModal()" title="Compare All 5 Models">
+                            <i class="fa-solid fa-code-compare"></i> Compare Models
+                        </button>
+                        <button class="pill-btn" onclick="openFullscreenResult()" title="Fullscreen Zoom">
+                            <i class="fa-solid fa-expand"></i> Fullscreen
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SIDE-BY-SIDE BEFORE/AFTER CARDS (Section 3 Requirement) -->
+                <div class="side-by-side-wrapper" id="side-by-side-view">
+                    <div class="side-by-side-grid">
+                        <!-- Original Degraded Image Card -->
+                        <div class="heritage-image-card original-card">
+                            <div class="card-header-badge-row">
+                                <span class="badge-degraded"><i class="fa-solid fa-triangle-exclamation"></i> Original Degraded Image</span>
+                                <span class="dim-badge" id="orig-dim-badge">Input</span>
+                            </div>
+                            <div class="heritage-img-wrap">
+                                <img src="" alt="Original Degraded Image" id="side-orig-img" class="heritage-img" style="min-height:120px; background:#f0e8d8;">
+                            </div>
+                        </div>
+
+                        <!-- Restored Image Card -->
+                        <div class="heritage-image-card restored-card">
+                            <div class="card-header-badge-row">
+                                <span class="badge-restored"><i class="fa-solid fa-wand-magic-sparkles"></i> Restored Image</span>
+                                <span class="model-badge" id="model-used-badge">Restormer (Best Model)</span>
+                            </div>
+                            <div class="heritage-img-wrap">
+                                <img src="" alt="Restored Image" id="side-restored-img" class="heritage-img" style="min-height:120px; background:#f0e8d8;">
+                            </div>
+                            <!-- Quality Metrics Banner -->
+                            <div class="metrics-banner" id="metrics-banner">
+                                <i class="fa-solid fa-circle-info metrics-info-icon"></i>
+                                <span id="metrics-banner-text">Reference image unavailable — quantitative metrics cannot be calculated.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Single View Mode (Before or After) -->
+                <div class="single-image-view" id="single-image-view" style="display:none;">
+                    <img src="" alt="Restoration Output" id="result-main-img" class="result-img" style="min-height:120px;">
+                    <span class="result-badge-floating" id="result-badge-floating">After (Restored)</span>
+                </div>
+
+                <!-- Split Comparison Slider Mode -->
+                <div class="split-slider-view" id="split-slider-view" style="display:none;">
+                    <div class="split-container" id="split-container">
+                        <img src="" alt="Restored" class="split-img split-after" id="split-after-img">
+                        <div class="split-before-wrap" id="split-before-wrap">
+                            <img src="" alt="Damaged" class="split-img split-before" id="split-before-img">
+                        </div>
+                        <div class="split-handle" id="split-handle">
+                            <div class="split-handle-line"></div>
+                            <div class="split-handle-button">
+                                <i class="fa-solid fa-arrows-left-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Extracted Historical Text Card with [ Copy Text ] and [ Clear ] -->
+                <div class="ocr-result-card">
+                    <div class="ocr-card-header">
+                        <div class="ocr-title-wrap">
+                            <h4 class="ocr-card-title"><i class="fa-solid fa-scroll"></i> Extracted Historical Text</h4>
+                            <span class="ocr-lang-badge" id="ocr-lang-badge">Sanskrit / Devanagari</span>
+                        </div>
+                        <span class="ocr-accuracy-badge"><i class="fa-solid fa-shield-check"></i> High Accuracy OCR</span>
+                    </div>
+                    <textarea class="ocr-text-box" id="ocr-text-content" rows="3" placeholder="Extracted text will appear here after restoration..."></textarea>
+                    <div class="ocr-action-row">
+                        <button class="btn-text-action" onclick="copyExtractedText()">
+                            <i class="fa-regular fa-copy"></i>
+                            <span id="copy-btn-text">Copy Text</span>
+                        </button>
+                        <button class="btn-text-action" onclick="clearExtractedText()">
+                            <i class="fa-regular fa-trash-can"></i>
+                            <span>Clear</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Translate Extracted Text section with language dropdown & [ Translate ] -->
+                <div class="translate-section-card">
+                    <div class="translate-card-header">
+                        <h4 class="translate-section-title"><i class="fa-solid fa-language"></i> Translate Extracted Text</h4>
+                    </div>
+                    <div class="translate-controls-row">
+                        <div class="lang-select-wrap">
+                            <label for="target-lang-select" class="lang-label">Target Language:</label>
+                            <select id="target-lang-select" class="custom-select lang-dropdown">
+                                <option value="en" selected>English</option>
+                                <option value="hi">Hindi (हिंदी)</option>
+                                <option value="ta">Tamil (தமிழ்)</option>
+                                <option value="te">Telugu (తెలుగు)</option>
+                                <option value="sa">Sanskrit (संस्कृतम्)</option>
+                                <option value="fr">French (Français)</option>
+                                <option value="de">German (Deutsch)</option>
+                                <option value="es">Spanish (Español)</option>
+                            </select>
+                        </div>
+                        <button class="btn-espresso-primary btn-translate-action" id="btn-translate-action" onclick="performTranslation()">
+                            <i class="fa-solid fa-language"></i>
+                            <span>Translate</span>
+                        </button>
+                    </div>
+                    <div class="translated-output-box" id="translated-output-box">
+                        Salutations to Lord Ganesha. Knowledge bestows humility; from humility comes worthiness; from worthiness comes wealth; from wealth comes righteousness, and from righteousness comes true happiness.
+                    </div>
+                </div>
+
+                <!-- Main Download Buttons -->
+                <div class="result-bottom-actions">
+                    <button class="btn-espresso-primary" onclick="downloadRestoredImage()">
+                        <i class="fa-solid fa-download"></i>
+                        <span>Download Restored Image</span>
+                    </button>
+                    <button class="btn-cream-outline" onclick="downloadExtractedText()">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span>Download OCR Text</span>
+                    </button>
+                </div>
+
+            </section>
+
+            <!-- =========================================================
+                 SCREEN 5: TEXT & TRANSLATION VIEW
+                 ========================================================= -->
+            <section class="app-view" id="view-translate">
+                
+                <!-- Extracted Text Card -->
+                <div class="translate-card">
+                    <div class="translate-card-header">
+                        <span class="translate-card-label">Extracted Text (Original Script)</span>
+                        <span class="ocr-lang-badge">Sanskrit (Devanagari)</span>
+                    </div>
+                    <div class="translate-text-content original" id="trans-original-text">
+                        श्रीगणेशाय नमः । विद्या ददाति विनयं विनयाद् याति पात्रताम् । पात्रत्वात् धनमाप्नोति धनात् धर्मं ततः सुखम् ॥
+                    </div>
+                    <div class="translate-card-actions">
+                        <button class="btn-mini-action" onclick="copyText('trans-original-text')">
+                            <i class="fa-regular fa-copy"></i> Copy Original
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Translation Target Selector -->
+                <div class="translation-selector-row">
+                    <span class="translate-label">Translate to:</span>
+                    <select id="target-lang-select" class="custom-select lang-dropdown" onchange="triggerLiveTranslation()">
+                        <option value="en" selected>English</option>
+                        <option value="hi">Hindi (हिंदी)</option>
+                        <option value="ta">Tamil (தமிழ்)</option>
+                        <option value="te">Telugu (తెలుగు)</option>
+                        <option value="sa">Sanskrit (संस्कृतम्)</option>
+                        <option value="fr">French (Français)</option>
+                        <option value="de">German (Deutsch)</option>
+                        <option value="es">Spanish (Español)</option>
+                    </select>
+                </div>
+
+                <!-- Translated Text Card -->
+                <div class="translate-card translated-box">
+                    <div class="translate-card-header">
+                        <span class="translate-card-label">Translated Text</span>
+                        <span class="ocr-lang-badge target-badge" id="trans-target-badge">English</span>
+                    </div>
+                    <div class="translate-text-content" id="trans-translated-text">
+                        Salutations to Lord Ganesha. Knowledge bestows humility; from humility comes worthiness; from worthiness comes wealth; from wealth comes righteousness, and from righteousness comes true happiness.
+                    </div>
+                    <div class="translate-card-actions">
+                        <button class="btn-mini-action" onclick="copyText('trans-translated-text')">
+                            <i class="fa-regular fa-copy"></i> Copy Translation
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <div class="translate-bottom-actions">
+                    <button class="btn-espresso-primary" onclick="downloadBothTexts()">
+                        <i class="fa-solid fa-download"></i>
+                        <span>Download Text</span>
+                    </button>
+                </div>
+
+            </section>
+
+            <!-- =========================================================
+                 SCREEN 6: HISTORY VIEW
+                 ========================================================= -->
+            <section class="app-view" id="view-history">
+                
+                <!-- History Header Bar -->
+                <div class="history-top-bar">
+                    <div class="history-search-wrap">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" id="history-search-input" class="history-search-input" placeholder="Search documents..." oninput="filterHistoryList()">
+                    </div>
+                    <button class="btn-clear-trash" onclick="confirmClearHistory()" title="Clear All History">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>
+                </div>
+
+                <!-- Filter Chips -->
+                <div class="filter-chips-row">
+                    <button class="filter-chip active" data-filter="all" onclick="setHistoryFilter('all', this)">All</button>
+                    <button class="filter-chip" data-filter="restored" onclick="setHistoryFilter('restored', this)">Restored</button>
+                    <button class="filter-chip" data-filter="ocr" onclick="setHistoryFilter('ocr', this)">OCR</button>
+                    <button class="filter-chip" data-filter="translated" onclick="setHistoryFilter('translated', this)">Translated</button>
+                </div>
+
+                <!-- History Items List -->
+                <div class="history-items-list" id="history-items-list">
+                    <!-- Dynamic History Items injected by JS -->
+                </div>
+
+            </section>
+
+            <!-- =========================================================
+                 SCREEN 8: SETTINGS VIEW
+                 ========================================================= -->
+            <section class="app-view" id="view-settings">
+                
+                <div class="settings-group">
+                    <h4 class="settings-group-title">Preferences</h4>
+                    
+                    <div class="setting-item">
+                        <div class="setting-item-info">
+                            <span class="setting-name">App Language</span>
+                            <span class="setting-sub">Interface display language</span>
+                        </div>
+                        <select class="custom-select setting-select">
+                            <option selected>English</option>
+                            <option>Hindi (हिंदी)</option>
+                            <option>Tamil (தமிழ்)</option>
+                            <option>Telugu (తెలుగు)</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-item-info">
+                            <span class="setting-name">Dark Mode</span>
+                            <span class="setting-sub">Switch between warm ivory &amp; dark theme</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="chk-dark-mode" onchange="toggleDarkTheme(this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-item-info">
+                            <span class="setting-name">Archival Image Enhancement</span>
+                            <span class="setting-sub">Adaptive background illumination leveling</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="chk-archival-enhance" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-item-info">
+                            <span class="setting-name">High Accuracy OCR</span>
+                            <span class="setting-sub">Multi-pass stroke enhancement for ancient scripts</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="chk-high-acc" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-item-info">
+                            <span class="setting-name">Notifications</span>
+                            <span class="setting-sub">Pipeline completion alerts</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="chk-notifications" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h4 class="settings-group-title">Model Specifications</h4>
+                    <div class="setting-info-row">
+                        <span>Restoration Architecture</span>
+                        <strong>DnCNN / UNet (75 Epochs)</strong>
+                    </div>
+                    <div class="setting-info-row">
+                        <span>OCR Recognition</span>
+                        <strong>EasyOCR Deep Learning</strong>
+                    </div>
+                    <div class="setting-info-row">
+                        <span>Illumination Leveling</span>
+                        <strong>Morphological Division (238)</strong>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h4 class="settings-group-title">About</h4>
+                    <div class="setting-info-row">
+                        <span>Application Version</span>
+                        <strong>1.0.0 (Production)</strong>
+                    </div>
+                    <div class="setting-info-row">
+                        <span>AI Framework</span>
+                        <strong>PyTorch 2.6 + OpenCV</strong>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+
+        <!-- =========================================================
+             PERSISTENT BOTTOM NAVIGATION BAR
+             ========================================================= -->
+        <nav class="app-bottom-nav">
+            <button class="nav-tab active" id="nav-home" onclick="navigateTo('home')">
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+            </button>
+            <button class="nav-tab" id="nav-upload" onclick="navigateTo('upload')">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>Upload</span>
+            </button>
+            <button class="nav-tab" id="nav-history" onclick="navigateTo('history')">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span>History</span>
+            </button>
+            <button class="nav-tab" id="nav-settings" onclick="navigateTo('settings')">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <!-- =========================================================
+         SAMPLE GALLERY MODAL
+         ========================================================= -->
+    <div class="modal-backdrop" id="gallery-modal" style="display:none;">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Select a Sample Document</h3>
+                <button class="btn-modal-close" onclick="closeGalleryModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="sample-cards-grid" id="sample-cards-grid">
+                <!-- Sanskrit Manuscript -->
+                <div class="sample-select-card" onclick="selectSampleDocument('sanskrit')">
+                    <img src="/static/images/warm/hero_manuscript.png" alt="Ancient Sanskrit Manuscript">
+                    <div class="sample-select-meta">
+                        <h4>Ancient Sanskrit Manuscript</h4>
+                        <p>12th Century AD • Palm Leaf</p>
+                    </div>
+                </div>
+                <!-- Palm Leaf Inscription -->
+                <div class="sample-select-card" onclick="selectSampleDocument('palmleaf')">
+                    <img src="/static/images/warm/thumb_1.png" alt="Palm Leaf Scripture">
+                    <div class="sample-select-meta">
+                        <h4>Palm Leaf Scriptural Folio</h4>
+                        <p>14th Century CE • Southern Indic</p>
+                    </div>
+                </div>
+                <!-- Stone Inscription -->
+                <div class="sample-select-card" onclick="selectSampleDocument('stone')">
+                    <img src="/static/images/warm/thumb_2.png" alt="Stone Inscription">
+                    <div class="sample-select-meta">
+                        <h4>Grantha Stone Inscription</h4>
+                        <p>Chola Dynasty • 11th Century</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         COMPARE ALL MODELS MODAL
+         ========================================================= -->
+    <div class="modal-backdrop" id="compare-modal" style="display:none;">
+        <div class="modal-box modal-wide">
+            <div class="modal-header">
+                <h3>Multi-Model Comparison</h3>
+                <button class="btn-modal-close" onclick="closeCompareModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="compare-grid" id="compare-modal-grid">
+                <div class="compare-card">
+                    <h4>DnCNN (Archival Fast)</h4>
+                    <img src="/static/images/warm/result_after.png" alt="DnCNN Output">
+                    <span class="compare-metric">PSNR: 32.4 dB • SSIM: 0.942</span>
+                </div>
+                <div class="compare-card">
+                    <h4>U-Net (Structural)</h4>
+                    <img src="/static/images/warm/result_after.png" alt="U-Net Output">
+                    <span class="compare-metric">PSNR: 31.8 dB • SSIM: 0.938</span>
+                </div>
+                <div class="compare-card">
+                    <h4>Restormer</h4>
+                    <img src="/static/images/warm/result_after.png" alt="Restormer Output">
+                    <span class="compare-metric">PSNR: 33.1 dB • SSIM: 0.951</span>
+                </div>
+                <div class="compare-card">
+                    <h4>SwinIR</h4>
+                    <img src="/static/images/warm/result_after.png" alt="SwinIR Output">
+                    <span class="compare-metric">PSNR: 32.9 dB • SSIM: 0.948</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         FULLSCREEN ZOOM MODAL
+         ========================================================= -->
+    <div class="modal-backdrop" id="fullscreen-modal" style="display:none;" onclick="closeFullscreenResult()">
+        <div class="fullscreen-wrap">
+            <img src="/static/images/warm/result_after.png" alt="Fullscreen Image" id="fullscreen-img">
+            <button class="btn-fullscreen-close" onclick="closeFullscreenResult()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast-notification" id="toast-notification">Notification text</div>
+
+    <!-- Scripts -->
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

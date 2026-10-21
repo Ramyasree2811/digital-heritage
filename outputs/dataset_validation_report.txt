@@ -1,0 +1,43 @@
+======================================================================
+ DIGITAL HERITAGE DATASET VALIDATION REPORT
+======================================================================
+
+Validation Status: PASS
+Timestamp:         2026-09-04T20:09:51.481145
+Total Samples:     3000
+  - Train:         2100 samples (70%)
+  - Validation:    450 samples (15%)
+  - Test:          450 samples (15%)
+
+----------------------------------------------------------------------
+ INTEGRITY CHECKS:
+----------------------------------------------------------------------
+  * Missing files                 : 0
+  * Corrupted files               : 0
+  * Dimension mismatches          : 0
+  * Channel mismatches            : 0
+  * Clean degraded mismatches     : 0
+  * Mask mismatches               : 0
+  * Duplicate clean in train      : 184
+  * Duplicate clean in validation : 10
+  * Duplicate clean in test       : 11
+  * Leakage train to val          : 39
+  * Leakage train to test         : 51
+  * Leakage val to test           : 18
+
+----------------------------------------------------------------------
+ DOMAIN-WISE SAMPLE COUNTS:
+----------------------------------------------------------------------
+  * palm_leaf      : 1000 clean | 1000 degraded | 1000 masks
+  * documents      : 1000 clean | 1000 degraded | 1000 masks
+  * monuments      : 1000 clean | 1000 degraded | 1000 masks
+
+----------------------------------------------------------------------
+ DATA OVERLAP & SPLIT ISOLATION:
+----------------------------------------------------------------------
+  * Train vs Validation clean hash overlap: 39
+  * Train vs Test clean hash overlap:       51
+  * Validation vs Test clean hash overlap:  18
+  Note: Degraded images and masks are uniquely generated per sample.
+
+Result: All images, masks, and metadata are 100% synchronized and verified.

@@ -1,0 +1,47 @@
+{
+    "U-Net": {
+        "PSNR": 9.75,
+        "SSIM": 0.4061,
+        "MSE": 0.1155,
+        "MAE": 0.312,
+        "Latency_ms": 338.9,
+        "key": "unet",
+        "Composite_Score": 17.97
+    },
+    "DnCNN": {
+        "PSNR": 18.65,
+        "SSIM": 0.593,
+        "MSE": 0.0177,
+        "MAE": 0.0811,
+        "Latency_ms": 158.3,
+        "key": "dncnn",
+        "Composite_Score": 93.28
+    },
+    "Pix2Pix": {
+        "PSNR": 10.49,
+        "SSIM": 0.1572,
+        "MSE": 0.104,
+        "MAE": 0.284,
+        "Latency_ms": 86.4,
+        "key": "pix2pix",
+        "Composite_Score": 6.18
+    },
+    "Restormer": {
+        "PSNR": 19.16,
+        "SSIM": 0.6419,
+        "MSE": 0.0156,
+        "MAE": 0.0651,
+        "Latency_ms": 610.7,
+        "key": "restormer",
+        "Composite_Score": 100.0
+    },
+    "SwinIR": {
+        "PSNR": 17.3,
+        "SSIM": 0.6322,
+        "MSE": 0.0217,
+        "MAE": 0.0877,
+        "Latency_ms": 515.0,
+        "key": "swinir",
+        "Composite_Score": 90.09
+    }
+}

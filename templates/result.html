@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restoration Result</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-building-columns brand-icon"></i>
+                <div class="brand-text">
+                    <h2>Digital Heritage</h2>
+                    <p>Restoration Portal</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="/" class="nav-item"><i class="fa-solid fa-house"></i> Home</a>
+                <a href="/compare/{{ record.id }}" class="nav-item"><i class="fa-solid fa-chart-simple"></i> Model Comparison</a>
+                <a href="/" class="nav-item"><i class="fa-solid fa-arrow-left"></i> Back to Upload</a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <p>Version 1.0.0</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="content-header">
+                <div class="header-title">
+                    <h1>Restoration Result</h1>
+                    <p>Restored using <strong>{{ record.model }}</strong> (Domain: {{ record.domain.replace('_', ' ').title() }})</p>
+                </div>
+            </header>
+
+            <!-- Side-by-Side Images -->
+            <section class="card results-card">
+                <div class="results-layout">
+                    <!-- Before Image -->
+                    <div class="image-box">
+                        <div class="box-header">
+                            <h4><i class="fa-solid fa-image"></i> Before (Original Image)</h4>
+                        </div>
+                        <div class="img-wrapper">
+                            <img src="{{ record.original }}" id="img-original" alt="Original Image">
+                        </div>
+                    </div>
+                    
+                    <!-- After Image -->
+                    <div class="image-box">
+                        <div class="box-header">
+                            <h4><i class="fa-solid fa-wand-magic-sparkles"></i> After (Restored Image)</h4>
+                        </div>
+                        <div class="img-wrapper">
+                            <img src="{{ record.restored }}" id="img-restored" alt="Restored Image">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="results-actions">
+                    <button class="btn btn-outline" id="btn-toggle-mask"><i class="fa-solid fa-mask"></i> Show Detected Damage</button>
+                    <a href="{{ record.restored }}" download="restored_{{ record.id }}.png" class="btn btn-secondary"><i class="fa-solid fa-download"></i> Download Restored</a>
+                    <a href="{{ record.high_res }}" download="high_res_{{ record.id }}.png" class="btn btn-primary"><i class="fa-solid fa-expand"></i> Download High-Res (2x)</a>
+                    <a href="/compare/{{ record.id }}" class="btn btn-outline"><i class="fa-solid fa-chart-simple"></i> Compare Models</a>
+                </div>
+                
+                <!-- Hidden Damage Mask Panel (toggled via JS) -->
+                <div class="mask-panel" id="mask-panel" style="display: none;">
+                    <h4><i class="fa-solid fa-circle-nodes"></i> Detected Damage Mask</h4>
+                    <p>This binary mask shows the exact areas where the AI detected physical tears, stains, wormholes, or scratches (shown in white).</p>
+                    <div class="mask-img-wrapper">
+                        <img src="{{ record.mask }}" alt="Damage Mask">
+                    </div>
+                </div>
+            </section>
+
+            <!-- OCR & Translation Cards -->
+            {% if record.text %}
+                <div class="text-extraction-grid">
+                    <!-- Extracted Text (OCR) -->
+                    <section class="card text-card">
+                        <div class="card-header text-header">
+                            <h3><i class="fa-solid fa-file-lines"></i> Extracted Text (OCR)</h3>
+                            <button class="btn btn-text btn-copy" data-target="extracted-text-content"><i class="fa-solid fa-copy"></i> Copy</button>
+                        </div>
+                        <div class="ocr-text-box">
+                            <pre class="sanskrit-text" id="extracted-text-content">{{ record.text }}</pre>
+                        </div>
+                    </section>
+
+                    <!-- Translated Text -->
+                    <section class="card text-card">
+                        <div class="card-header text-header">
+                            <h3><i class="fa-solid fa-language"></i> Translation</h3>
+                            <button class="btn btn-text btn-copy" data-target="translation-content"><i class="fa-solid fa-copy"></i> Copy</button>
+                        </div>
+                        <div class="translation-box">
+                            <p class="english-translation" id="translation-content">{{ record.translation }}</p>
+                        </div>
+                    </section>
+                </div>
+            {% endif %}
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Damage Mask Toggle
+            const btnToggleMask = document.getElementById("btn-toggle-mask");
+            const maskPanel = document.getElementById("mask-panel");
+            const imgRestored = document.getElementById("img-restored");
+            const originalSrc = "{{ record.restored }}";
+            const maskSrc = "{{ record.mask }}";
+            
+            let showingMask = false;
+            
+            btnToggleMask.addEventListener("click", function() {
+                showingMask = !showingMask;
+                if (showingMask) {
+                    maskPanel.style.display = "block";
+                    btnToggleMask.innerHTML = '<i class="fa-solid fa-image"></i> Show Restored';
+                    btnToggleMask.classList.add("active");
+                    // Scroll to mask panel
+                    maskPanel.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    maskPanel.style.display = "none";
+                    btnToggleMask.innerHTML = '<i class="fa-solid fa-mask"></i> Show Detected Damage';
+                    btnToggleMask.classList.remove("active");
+                }
+            });
+            
+            // Copy buttons
+            const copyButtons = document.querySelectorAll(".btn-copy");
+            copyButtons.forEach(btn => {
+                btn.addEventListener("click", function() {
+                    const targetId = this.getAttribute("data-target");
+                    const text = document.getElementById(targetId).innerText;
+                    
+                    navigator.clipboard.writeText(text).then(() => {
+                        const originalHTML = this.innerHTML;
+                        this.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+                        setTimeout(() => {
+                            this.innerHTML = originalHTML;
+                        }, 2000);
+                    }).catch(err => {
+                        console.error("Failed to copy text:", err);
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
