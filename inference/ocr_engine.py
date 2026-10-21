@@ -19,8 +19,8 @@ def init_ocr():
         
     if EASYOCR_AVAILABLE:
         try:
-            # Initialize with Hindi ('hi') and English ('en')
-            ocr_reader = easyocr.Reader(['hi', 'en'], gpu=torch.cuda.is_available(), verbose=False)
+            # Initialize with Hindi ('hi') and English ('en') without dynamic quantization to prevent memory overhead
+            ocr_reader = easyocr.Reader(['hi', 'en'], gpu=torch.cuda.is_available(), verbose=False, quantize=False)
             return True
         except Exception as e:
             print(f"Notice: EasyOCR reader initialization notice: {e}")
@@ -33,7 +33,7 @@ def get_ocr_reader():
         init_ocr()
     return ocr_reader
 
-def preprocess_image_for_ocr(image, max_dim=512):
+def preprocess_image_for_ocr(image, max_dim=384):
     """
     Optimizes heritage image for fast, robust character detection.
     Prevents downscaling wide palm-leaf banners which would shrink character height too much.
@@ -90,7 +90,7 @@ def extract_text_from_heritage(image):
             "link_threshold": 0.25,
             "slope_ths": 0.2,
             "mag_ratio": 1.0,
-            "canvas_size": 512
+            "canvas_size": 384
         }
         import gc
         gc.collect()

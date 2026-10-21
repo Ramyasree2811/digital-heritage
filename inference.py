@@ -433,6 +433,17 @@ class HeritageRestorer:
 
         # 7. Multi-pass OCR Text Extraction
         extracted_text = ""
+        # Free neural restoration model and intermediate tensors to ensure maximum headroom for OCR
+        try:
+            del model
+            self._model_cache.clear()
+            import gc
+            gc.collect()
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+        except Exception:
+            pass
+
         if run_ocr:
             try:
                 extracted_text = extract_text_from_heritage(restored_final)
