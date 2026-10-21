@@ -353,7 +353,7 @@ function startRestorationProcess() {
     .catch(err => {
         console.error('API Error:', err);
         navigateTo('upload');
-        alert('Could not complete restoration: ' + err.message + '\n\nPlease ensure python app.py is running on http://127.0.0.1:5000 and try again.');
+        alert('Could not complete restoration: ' + err.message + '\n\nPlease try again or try another sample image.');
     });
 }
 

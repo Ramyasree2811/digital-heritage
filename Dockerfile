@@ -29,7 +29,8 @@ COPY requirements.txt .
 # Install PyTorch CPU and Python dependencies
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir -r requirements.txt && \
+    python -c "import easyocr; easyocr.Reader(['hi', 'en'], gpu=False, verbose=False)"
 
 # Copy application source code and models
 COPY . /app

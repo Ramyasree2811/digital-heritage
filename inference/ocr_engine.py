@@ -33,7 +33,7 @@ def get_ocr_reader():
         init_ocr()
     return ocr_reader
 
-def preprocess_image_for_ocr(image, max_dim=1800):
+def preprocess_image_for_ocr(image, max_dim=800):
     """
     Optimizes heritage image for fast, robust character detection.
     Prevents downscaling wide palm-leaf banners which would shrink character height too much.
@@ -82,8 +82,6 @@ def extract_text_from_heritage(image):
         ocr_input = preprocess_image_for_ocr(image)
         extracted_lines = []
 
-        # Heritage detector sensitivity tuning:
-        # Default text_threshold=0.7 is too strict for degraded, broken, or abraded historical characters.
         ocr_kwargs = {
             "detail": 1,
             "paragraph": False,
@@ -91,8 +89,11 @@ def extract_text_from_heritage(image):
             "low_text": 0.25,
             "link_threshold": 0.25,
             "slope_ths": 0.2,
-            "mag_ratio": 1.5
+            "mag_ratio": 1.0,
+            "canvas_size": 800
         }
+        import gc
+        gc.collect()
 
         # -------------------------------------------------------------
         # PASS 1: Natural RGB image with heritage-tuned sensitivity
