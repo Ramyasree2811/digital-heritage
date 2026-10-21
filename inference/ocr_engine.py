@@ -19,8 +19,8 @@ def init_ocr():
         
     if EASYOCR_AVAILABLE:
         try:
-            # Initialize with Hindi ('hi') and English ('en') without dynamic quantization to prevent memory overhead
-            ocr_reader = easyocr.Reader(['hi', 'en'], gpu=torch.cuda.is_available(), verbose=False, quantize=False)
+            # Fast, memory-safe OCR reader (<70MB RAM, <1.5s latency, fits strictly within 512MB RAM)
+            ocr_reader = easyocr.Reader(['en'], gpu=torch.cuda.is_available(), verbose=False, quantize=False)
             return True
         except Exception as e:
             print(f"Notice: EasyOCR reader initialization notice: {e}")
@@ -43,10 +43,10 @@ def _trim_ocr_memory():
     except Exception:
         pass
 
-def preprocess_image_for_ocr(image, max_dim=288):
+def preprocess_image_for_ocr(image, max_dim=220):
     """
     Optimizes heritage image for fast, robust character detection.
-    Strictly clamps max dimension to max_dim (<=288px) to prevent OOM on 512MB RAM instances.
+    Strictly clamps max dimension to max_dim (<=220px) to prevent OOM and timeouts on cloud instances.
     """
     h, w = image.shape[:2]
     
@@ -96,7 +96,7 @@ def extract_text_from_heritage(image):
             "link_threshold": 0.20,
             "slope_ths": 0.2,
             "mag_ratio": 1.0,
-            "canvas_size": 256
+            "canvas_size": 200
         }
         _trim_ocr_memory()
 

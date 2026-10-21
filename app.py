@@ -13,6 +13,13 @@ from inference.restore import restore_heritage_image
 
 restorer = HeritageRestorer()
 
+# Pre-warm OCR reader once at startup so incoming user requests execute with zero lag
+try:
+    from inference.ocr_engine import init_ocr
+    init_ocr()
+except Exception as e:
+    print(f"Notice: OCR pre-warming notice: {e}")
+
 app = Flask(__name__)
 
 # Paths
