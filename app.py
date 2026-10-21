@@ -53,6 +53,10 @@ def save_history(history):
     with open(HISTORY_FILE, "w") as f:
         json.dump(history, f, indent=4)
 
+@app.route("/health")
+def health():
+    return jsonify({"status": "ok", "service": "digital-heritage-restoration"}), 200
+
 @app.route("/")
 def index():
     history = load_history()

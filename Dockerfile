@@ -9,7 +9,7 @@ FROM python:3.11-slim
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     DEBIAN_FRONTEND=noninteractive \
-    PORT=5000
+    PORT=10000
 
 # Install essential system dependencies for OpenCV and image processing
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -38,7 +38,7 @@ COPY . /app
 RUN mkdir -p static/uploads static/outputs outputs/checkpoints
 
 # Expose service port
-EXPOSE 5000
+EXPOSE 10000
 
-# Start production WSGI server with Gunicorn
-CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-5000} --workers 2 --timeout 180 app:app"]
+# Start production WSGI server with Gunicorn (1 worker + 4 threads to prevent OOM on 512MB RAM)
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-10000} --workers 1 --threads 4 --timeout 180 app:app"]
