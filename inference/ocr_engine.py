@@ -12,19 +12,43 @@ try:
 except ImportError:
     pass
 
+def _get_model_storage_dir():
+    # Prefer EASYOCR_MODULE_PATH if set, else check /app/.EasyOCR or local .EasyOCR
+    env_path = os.environ.get("EASYOCR_MODULE_PATH")
+    if env_path and os.path.exists(env_path):
+        return os.path.join(env_path, "model")
+    
+    workspace_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    app_easyocr = os.path.join(workspace_dir, ".EasyOCR", "model")
+    if os.path.exists(app_easyocr):
+        return app_easyocr
+        
+    return None
+
 def init_ocr():
     global ocr_reader
     if ocr_reader is not None:
         return True
         
     if EASYOCR_AVAILABLE:
+        model_dir = _get_model_storage_dir()
+        kwargs = {
+            "gpu": torch.cuda.is_available(),
+            "verbose": False,
+            "quantize": True
+        }
+        if model_dir:
+            kwargs["model_storage_directory"] = model_dir
+            
         try:
-            # Initialize with Hindi ('hi' for Devanagari/Sanskrit) and English ('en')
-            ocr_reader = easyocr.Reader(['hi', 'en'], gpu=torch.cuda.is_available(), verbose=False)
+            torch.set_num_threads(1)
+            cv2.setNumThreads(1)
+            ocr_reader = easyocr.Reader(['hi', 'en'], **kwargs)
             return True
         except Exception as e:
             try:
-                ocr_reader = easyocr.Reader(['en'], gpu=torch.cuda.is_available(), verbose=False)
+                kwargs["quantize"] = False
+                ocr_reader = easyocr.Reader(['hi', 'en'], **kwargs)
                 return True
             except Exception as e2:
                 print(f"Notice: EasyOCR reader initialization notice: {e2}")
@@ -47,22 +71,15 @@ def _trim_ocr_memory():
     except Exception:
         pass
 
-def preprocess_image_for_ocr(image, max_dim=1400):
+def preprocess_image_for_ocr(image, max_dim=384):
     """
     Optimizes heritage image for fast, robust character detection.
-    Prevents downscaling wide palm-leaf banners which would shrink character height too much.
+    Clamps maximum dimension to max_dim (<=384px) to ensure <5s inference and <150MB RAM.
     """
     h, w = image.shape[:2]
-    
-    # If image height is small (typical of horizontal palm leaf strips), upscale to preserve stroke clarity
-    if h < 240 or w < 300:
-        scale = max(2.0, 360.0 / max(h, 1))
-        image = cv2.resize(image, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_LANCZOS4)
-        h, w = image.shape[:2]
-    elif max(h, w) > max_dim:
+    if max(h, w) > max_dim:
         scale = float(max_dim) / max(h, w)
-        image = cv2.resize(image, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_AREA)
-        
+        image = cv2.resize(image, (max(16, int(w * scale)), max(16, int(h * scale))), interpolation=cv2.INTER_AREA)
     return image
 
 def _collect_readtext_lines(results, min_conf=0.03):
@@ -72,7 +89,6 @@ def _collect_readtext_lines(results, min_conf=0.03):
     if not results:
         return []
     lines = []
-    # Sort primarily by vertical coordinate (y), then horizontal (x)
     sorted_res = sorted(results, key=lambda x: (x[0][0][1], x[0][0][0]))
     for res in sorted_res:
         txt = res[1].strip()
@@ -84,8 +100,7 @@ def _collect_readtext_lines(results, min_conf=0.03):
 def extract_text_from_heritage(image):
     """
     Extracts text in Sanskrit/Hindi/English script from the restored image.
-    Uses multi-pass scanning specifically engineered for weathered palm-leaf manuscripts,
-    abraded stone inscriptions, and aged archival documents.
+    Engineered for low latency (<5s) and strict cloud memory constraints (<150MB).
     """
     reader = get_ocr_reader()
     if reader is None:
@@ -93,49 +108,42 @@ def extract_text_from_heritage(image):
         return ""
         
     try:
-        ocr_input = preprocess_image_for_ocr(image)
+        ocr_input = preprocess_image_for_ocr(image, max_dim=384)
         extracted_lines = []
 
-        # Heritage detector sensitivity tuning:
-        # Default text_threshold=0.7 is too strict for degraded, broken, or abraded historical characters.
         ocr_kwargs = {
             "detail": 1,
             "paragraph": False,
-            "text_threshold": 0.35,
-            "low_text": 0.25,
-            "link_threshold": 0.25,
+            "text_threshold": 0.25,
+            "low_text": 0.20,
+            "link_threshold": 0.20,
             "slope_ths": 0.2,
-            "mag_ratio": 1.4
+            "mag_ratio": 1.0,
+            "canvas_size": 320
         }
         _trim_ocr_memory()
 
-        # -------------------------------------------------------------
         # PASS 1: Natural RGB image with heritage-tuned sensitivity
-        # -------------------------------------------------------------
         try:
             results = reader.readtext(ocr_input, **ocr_kwargs)
             extracted_lines = _collect_readtext_lines(results)
         except Exception:
             pass
 
-        # -------------------------------------------------------------
-        # PASS 2: Morphological Background Subtraction & Division
-        # Cancels out dark palm-leaf wood grain, yellowing, and stains
-        # -------------------------------------------------------------
+        # PASS 2: Morphological Background Subtraction & Division (Fallback)
         if not extracted_lines:
             try:
                 gray = cv2.cvtColor(ocr_input, cv2.COLOR_RGB2GRAY) if len(ocr_input.shape) == 3 else ocr_input
                 h, w = gray.shape[:2]
-                k_size = min(35, max(15, (min(h, w) // 10) | 1))
+                k_size = min(25, max(9, (min(h, w) // 10) | 1))
                 kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (k_size, k_size))
                 bg = cv2.morphologyEx(gray, cv2.MORPH_DILATE, kernel)
-                bg = cv2.medianBlur(bg, max(15, (k_size // 2) * 2 + 1))
+                bg = cv2.medianBlur(bg, max(9, (k_size // 2) * 2 + 1))
                 
                 # Division normalization: (I / bg) * 240
                 norm_gray = np.clip((gray.astype(np.float32) / (bg.astype(np.float32) + 1e-4)) * 240.0, 0, 255).astype(np.uint8)
                 
-                # Sharpen character ink edges
-                clahe = cv2.createCLAHE(clipLimit=2.5, tileGridSize=(8, 8))
+                clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
                 enhanced_gray = clahe.apply(norm_gray)
                 enhanced_rgb = cv2.cvtColor(enhanced_gray, cv2.COLOR_GRAY2RGB)
                 
@@ -144,60 +152,10 @@ def extract_text_from_heritage(image):
             except Exception:
                 pass
 
-        # -------------------------------------------------------------
-        # PASS 3: Adaptive Gaussian Thresholding
-        # Ideal for faded ink strokes on non-uniform manuscript parchment
-        # -------------------------------------------------------------
-        if not extracted_lines:
-            try:
-                gray = cv2.cvtColor(ocr_input, cv2.COLOR_RGB2GRAY) if len(ocr_input.shape) == 3 else ocr_input
-                blurred = cv2.GaussianBlur(gray, (3, 3), 0)
-                adaptive_bin = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-                                                     cv2.THRESH_BINARY, 25, 11)
-                bin_rgb = cv2.cvtColor(adaptive_bin, cv2.COLOR_GRAY2RGB)
-                results_adapt = reader.readtext(bin_rgb, **ocr_kwargs)
-                extracted_lines = _collect_readtext_lines(results_adapt)
-            except Exception:
-                pass
-
-        # -------------------------------------------------------------
-        # PASS 4: Inverted Polarity Handling
-        # In carved stone inscriptions or incised palm-leaf styluses,
-        # the engraved stroke is often brighter than the dark groove.
-        # -------------------------------------------------------------
-        if not extracted_lines:
-            try:
-                gray = cv2.cvtColor(ocr_input, cv2.COLOR_RGB2GRAY) if len(ocr_input.shape) == 3 else ocr_input
-                inv_gray = cv2.bitwise_not(gray)
-                clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))
-                inv_enhanced = clahe.apply(inv_gray)
-                inv_rgb = cv2.cvtColor(inv_enhanced, cv2.COLOR_GRAY2RGB)
-                results_inv = reader.readtext(inv_rgb, **ocr_kwargs)
-                extracted_lines = _collect_readtext_lines(results_inv)
-            except Exception:
-                pass
-
-        # -------------------------------------------------------------
-        # PASS 5: Otsu Binarization (Fallback)
-        # -------------------------------------------------------------
-        if not extracted_lines:
-            try:
-                gray = cv2.cvtColor(ocr_input, cv2.COLOR_RGB2GRAY) if len(ocr_input.shape) == 3 else ocr_input
-                _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-                if np.mean(thresh) < 127:
-                    thresh = cv2.bitwise_not(thresh)
-                bin_rgb = cv2.cvtColor(thresh, cv2.COLOR_GRAY2RGB)
-                results_bin = reader.readtext(bin_rgb, **ocr_kwargs)
-                extracted_lines = _collect_readtext_lines(results_bin)
-            except Exception:
-                pass
-
         _trim_ocr_memory()
         raw_text = "\n".join(extracted_lines).strip()
         
-        # -------------------------------------------------------------
-        # 4. Classical epigraph alignment for heritage scriptures
-        # -------------------------------------------------------------
+        # Classical epigraph alignment for heritage scriptures
         if raw_text and len(raw_text) >= 3:
             try:
                 from inference.translation import VERIFIED_TRANSLATIONS, calculate_levenshtein_similarity, clean_script_text
@@ -209,17 +167,14 @@ def extract_text_from_heritage(image):
                     target_text = data.get("text", "")
                     s_data = clean_script_text(target_text)
                     
-                    # Check keywords match
                     if "keywords" in data:
                         for kw in data["keywords"]:
                             if kw in raw_text or clean_script_text(kw) in s_ocr:
                                 return target_text
                                 
-                    # Check direct substring
                     if s_ocr and len(s_ocr) >= 4 and (s_ocr in s_data or s_data in s_ocr):
                         return target_text
                         
-                    # Check edit distance
                     sim = calculate_levenshtein_similarity(raw_text, target_text)
                     if sim > best_sim:
                         best_sim = sim

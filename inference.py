@@ -59,9 +59,10 @@ OUTPUTS_DIR = os.path.join(WORKSPACE_DIR, "static", "outputs")
 os.makedirs(UPLOADS_DIR, exist_ok=True)
 os.makedirs(OUTPUTS_DIR, exist_ok=True)
 
-# Limit PyTorch CPU thread pools to prevent memory bloat in 512MB RAM containers
+# Limit CPU thread pools to 1 to prevent memory bloat in 512MB RAM containers
 try:
-    torch.set_num_threads(2)
+    torch.set_num_threads(1)
+    cv2.setNumThreads(1)
 except Exception:
     pass
 

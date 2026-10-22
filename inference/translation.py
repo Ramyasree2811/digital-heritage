@@ -899,7 +899,7 @@ def _translate_with_google_gtx(text, target_lang="en", source_lang="auto"):
             f"&sl={source_lang}&tl={target_lang}&dt=t&q=" + urllib.parse.quote(text)
         )
         req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
-        with urllib.request.urlopen(req, timeout=6) as r:
+        with urllib.request.urlopen(req, timeout=3) as r:
             data = json.loads(r.read().decode('utf-8'))
             translated_parts = [p[0] for p in data[0] if p and p[0]]
             res = "".join(translated_parts).strip()
@@ -934,6 +934,10 @@ def translate_heritage_text(text, target_lang="en"):
         "spanish": "es", "spa": "es"
     }
     target_lang = lang_map.get(target_lang, target_lang)
+
+    # Fast path: If already in English and target is English, return directly
+    if target_lang == "en" and all(ord(c) < 128 for c in cleaned_input):
+        return cleaned_input
 
     if "inscribed epigraph" in cleaned_input.lower():
         epigraph_translations = {

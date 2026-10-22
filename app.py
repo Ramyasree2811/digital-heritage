@@ -22,6 +22,17 @@ from inference.restore import restore_heritage_image
 
 restorer = HeritageRestorer()
 
+# Pre-warm OCR engine in a background daemon thread to eliminate cold-start lag
+import threading
+def _prewarm_ocr():
+    try:
+        from inference.ocr_engine import init_ocr
+        init_ocr()
+    except Exception as e:
+        print(f'Notice during background OCR pre-warm: {e}')
+
+threading.Thread(target=_prewarm_ocr, daemon=True).start()
+
 app = Flask(__name__)
 
 # Paths
