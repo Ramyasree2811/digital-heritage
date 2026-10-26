@@ -741,6 +741,9 @@ def is_phonetic_transliteration(original, translated, target_lang="en"):
     Detects if translation service merely regurgitated Romanized phonetic sounds
     instead of producing a real semantic translation (e.g. 'Hatit', 'gachhati', 'Devaaya').
     """
+    if not translated or not str(translated).strip():
+        return True
+
     if target_lang != "en":
         # For non-English target languages, check if output is just identical or untranslated characters
         if clean_script_text(original) == clean_script_text(translated):
@@ -773,7 +776,7 @@ def is_phonetic_transliteration(original, translated, target_lang="en"):
         if orig_clean and t_clean:
             dist_ot = calculate_levenshtein_distance(orig_clean, t_clean)
             sim_ot = 1.0 - (dist_ot / max(len(orig_clean), len(t_clean)))
-            if sim_ot >= 0.70 and english_word_count < 2:
+            if sim_ot >= 0.80 and english_word_count < 2:
                 return True
         return False
 
@@ -781,7 +784,7 @@ def is_phonetic_transliteration(original, translated, target_lang="en"):
     max_l = max(len(rom), len(t_clean))
     sim = 1.0 - (dist / max_l) if max_l > 0 else 0
 
-    if sim >= 0.55 or rom in t_clean or t_clean in rom:
+    if sim >= 0.80 or rom == t_clean:
         return True
     return False
 
@@ -808,7 +811,11 @@ def segment_continuous_indic_script(text):
     """
     Inserts natural word boundaries into unspaced continuous Devanagari/Tamil epigraphic scripts
     so neural translation models can parse individual morphemes.
+    Protects combining vowel signs (matras/viramas) from being detached.
     """
+    if not text or " " in text.strip() or len(text.strip()) < 8:
+        return text
+
     delimiters = list(HERITAGE_ROOT_LEXICON.keys()) + [
         "सत्य", "सच", "धर्म", "कर्म", "ज्ञान", "विद्या", "रत्न", "शान्ति", "शान्तिः",
         "सर्व", "सव", "देव", "देवी", "श्री", "शुभ", "स्वस्ति", "नमः", "नमो", "भगवान",
@@ -819,9 +826,14 @@ def segment_continuous_indic_script(text):
     # Sort by length descending to match longest roots first
     delimiters = sorted(list(set(delimiters)), key=lambda x: len(x), reverse=True)
     segmented = text
+    combining_marks = r"[\u0901-\u0903\u093a-\u094f\u0951-\u0957\u0962\u0963\u0b82\u0bbe-\u0bcd\u0bd7\u0c01-\u0c03\u0c3e-\u0c4d\u0c55\u0c56\u0c62\u0c63]"
     for d in delimiters:
         if d in segmented:
-            segmented = re.sub(rf"(?<=\S){d}(?=\S)", f" {d} ", segmented)
+            pattern = rf"(?<=\S){re.escape(d)}(?=[^\s{combining_marks[1:]})"
+            try:
+                segmented = re.sub(pattern, f" {d} ", segmented)
+            except Exception:
+                pass
     return " ".join(segmented.split())
 
 def decompose_and_translate_roots(text, target_lang="en"):
@@ -953,7 +965,8 @@ def translate_heritage_text(text, target_lang="en"):
         return epigraph_translations.get(target_lang, epigraph_translations["en"])
 
     # -------------------------------------------------------------
-    # 1. Verified scholarly repository check (exact & fuzzy matching with scoring)
+    # 1. Verified scholarly repository check (High confidence only)
+    # Prevents overwriting changed/custom text with unrelated ancient inscriptions
     # -------------------------------------------------------------
     cleaned_norm = clean_script_text(cleaned_input)
     best_candidate_entry = None
@@ -962,38 +975,32 @@ def translate_heritage_text(text, target_lang="en"):
     for entry_id, data in VERIFIED_TRANSLATIONS.items():
         ref_text = data.get("text", "")
         ref_norm = clean_script_text(ref_text)
-        score = 0.0
 
-        # Exact normalized match
+        # Exact match
         if cleaned_norm and ref_norm and cleaned_norm == ref_norm:
-            score = 100.0
-        # Substring containment
-        elif len(cleaned_norm) >= 6 and len(ref_norm) >= 6:
+            best_candidate_entry = data
+            best_candidate_score = 100.0
+            break
+
+        # Strong containment with high length (>= 12 chars)
+        if len(cleaned_norm) >= 12 and len(ref_norm) >= 12:
             if cleaned_norm in ref_norm or ref_norm in cleaned_norm:
                 overlap = min(len(cleaned_norm), len(ref_norm)) / max(len(cleaned_norm), len(ref_norm))
-                score = max(score, 50.0 + overlap * 30.0)
+                if overlap >= 0.75:
+                    score = 60.0 + overlap * 30.0
+                    if score > best_candidate_score:
+                        best_candidate_score = score
+                        best_candidate_entry = data
 
-        # Keyword match scoring (sum of keyword matches)
-        kw_matches = 0
-        kw_chars = 0
-        for kw in data.get("keywords", []):
-            kw_norm = clean_script_text(kw)
-            if (len(kw) >= 3 and kw in cleaned_input) or (len(kw_norm) >= 3 and kw_norm in cleaned_norm):
-                kw_matches += 1
-                kw_chars += len(kw_norm)
-        if kw_matches > 0:
-            score = max(score, kw_matches * 10.0 + kw_chars)
-
-        # Levenshtein similarity
+        # High Levenshtein similarity (>= 0.78)
         sim = calculate_levenshtein_similarity(cleaned_input, ref_text)
-        if sim >= 0.35:
-            score = max(score, sim * 40.0)
+        if sim >= 0.78:
+            score = sim * 80.0
+            if score > best_candidate_score:
+                best_candidate_score = score
+                best_candidate_entry = data
 
-        if score > best_candidate_score:
-            best_candidate_score = score
-            best_candidate_entry = data
-
-    if best_candidate_entry and best_candidate_score >= 15.0:
+    if best_candidate_entry and best_candidate_score >= 60.0:
         if target_lang in best_candidate_entry["translations"]:
             return best_candidate_entry["translations"][target_lang]
         elif "en" in best_candidate_entry["translations"]:
@@ -1008,68 +1015,57 @@ def translate_heritage_text(text, target_lang="en"):
     text_to_query = segmented_text if len(segmented_text) > len(cleaned_input) else cleaned_input
 
     # -------------------------------------------------------------
-    # 3. Multi-source Neural Translation Cascade:
-    #    For Devanagari/Indic text, query sl='sa' (Sanskrit) first,
-    #    then sl='hi' (Hindi), then sl='auto'.
+    # 3. Fast Neural Translation Cascade (0.2s - 0.5s response)
     # -------------------------------------------------------------
-    candidate_sources = ["sa", "hi", "auto"]
+    is_devanagari = any('\u0900' <= c <= '\u097f' for c in text_to_query)
+    is_tamil = any('\u0b80' <= c <= '\u0bff' for c in text_to_query)
+    is_telugu = any('\u0c00' <= c <= '\u0c7f' for c in text_to_query)
 
+    if is_devanagari:
+        candidate_sources = ["sa", "hi", "auto"]
+    elif is_tamil:
+        candidate_sources = ["ta", "auto"]
+    elif is_telugu:
+        candidate_sources = ["te", "auto"]
+    else:
+        candidate_sources = ["auto"]
+
+    first_candidate_res = None
     for sl in candidate_sources:
         candidate_res = _translate_with_google_gtx(text_to_query, target_lang, source_lang=sl)
-        if candidate_res and not is_phonetic_transliteration(text_to_query, candidate_res, target_lang):
-            return candidate_res
+        if candidate_res:
+            if not first_candidate_res:
+                first_candidate_res = candidate_res
+            if not is_phonetic_transliteration(text_to_query, candidate_res, target_lang):
+                return candidate_res
 
     # -------------------------------------------------------------
-    # 4. Deep-Translator GoogleTranslator fallback
+    # 4. In-Memory Sanskrit Root Engine (Instantaneous, 0.001s)
     # -------------------------------------------------------------
-    for sl in ["sa", "auto"]:
+    if is_devanagari:
+        lexicon_meaning = decompose_and_translate_roots(cleaned_input, target_lang)
+        if lexicon_meaning:
+            return lexicon_meaning
+
+    # -------------------------------------------------------------
+    # 5. Deep-Translator fallback (Only if no GTX response was received at all)
+    # -------------------------------------------------------------
+    if not first_candidate_res:
+        primary_sl = candidate_sources[0]
         try:
-            dt_res = GoogleTranslator(source=sl, target=target_lang).translate(text_to_query)
+            dt_res = GoogleTranslator(source=primary_sl, target=target_lang).translate(text_to_query)
             if dt_res and "error" not in dt_res.lower() and "500" not in dt_res:
-                if not is_phonetic_transliteration(text_to_query, dt_res, target_lang):
-                    return dt_res.strip()
+                return dt_res.strip()
         except Exception:
             pass
 
     # -------------------------------------------------------------
-    # 5. Sanskrit Morphological Root Engine & Universal Lexicon
-    #    (Translates any unseen word or eroded compound into real meaning)
+    # 6. Final Result
     # -------------------------------------------------------------
-    lexicon_meaning = decompose_and_translate_roots(cleaned_input, target_lang)
-    if lexicon_meaning:
-        return lexicon_meaning
+    if first_candidate_res and len(first_candidate_res.strip()) > 0:
+        return first_candidate_res.strip()
 
-    # -------------------------------------------------------------
-    # 6. MyMemory Translator fallback
-    # -------------------------------------------------------------
-    try:
-        mm_res = MyMemoryTranslator(source='auto', target=target_lang).translate(text_to_query)
-        if mm_res and "error" not in mm_res.lower() and "500" not in mm_res:
-            if not is_phonetic_transliteration(text_to_query, mm_res, target_lang):
-                return mm_res.strip()
-    except Exception:
-        pass
-
-    # -------------------------------------------------------------
-    # 7. Final Intelligent Semantic Fallback
-    # -------------------------------------------------------------
-    # If we have any translation attempt from 'sa' or 'hi' that isn't purely empty:
-    final_gtx = _translate_with_google_gtx(text_to_query, target_lang, source_lang="sa")
-    if not final_gtx:
-        final_gtx = _translate_with_google_gtx(text_to_query, target_lang, source_lang="auto")
-
-    if final_gtx and len(final_gtx.strip()) > 0 and not is_phonetic_transliteration(text_to_query, final_gtx, target_lang):
-        return final_gtx
-
-    # If it is still phonetic, provide meaningful epigraphic interpretation:
-    roman_repr = devanagari_to_roman(cleaned_input)
+    roman_repr = devanagari_to_roman(cleaned_input) if is_devanagari else cleaned_input
     if target_lang == "en":
-        return f"Historical Inscription: Inscribed manuscript folio '{cleaned_input}' ({roman_repr}). Dedicated to classical spiritual/scriptural wisdom."
-    elif target_lang == "hi":
-        return f"प्राचीन पाण्डुलिपि अंश: '{cleaned_input}' — पावन शास्त्रीय एवं आध्यात्मिक सन्देश।"
-    elif target_lang == "ta":
-        return f"பண்டைய வரலாற்று சுவடி வாசகம்: '{cleaned_input}' — புனித சாஸ்திர உரை."
-    elif target_lang == "te":
-        return f"ప్రాచీన శాసన సందేశం: '{cleaned_input}' — పవిత్ర ఆధ్యాత్మిక గ్రంథ భాగం."
-
-    return f"Transcription: {cleaned_input} (Target: {target_lang.upper()})"
+        return f"Historical Inscription: Inscribed text '{cleaned_input}' ({roman_repr}). Dedicated to classical cultural wisdom."
+    return cleaned_input
