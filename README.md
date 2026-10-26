@@ -1,102 +1,123 @@
----
-title: Digital Heritage Restoration
-emoji: 📜
-colorFrom: yellow
-colorTo: amber
-sdk: docker
-app_port: 7860
-pinned: false
----
-
 # 📜 Digital Heritage Restoration Platform
-
-[![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11-blue.svg)](https://www.python.org/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-ee4c2c.svg)](https://pytorch.org/)
-[![Flask](https://img.shields.io/badge/Flask-2.3+-black.svg)](https://flask.palletsprojects.com/)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ed.svg)](https://www.docker.com/)
-[![EasyOCR](https://img.shields.io/badge/OCR-EasyOCR-green.svg)](https://github.com/JaidedAI/EasyOCR)
-[![License](https://img.shields.io/badge/License-MIT-purple.svg)](LICENSE)
-
-An end-to-end deep learning platform engineered to restore physically damaged historical documents, palm-leaf manuscripts, and stone epigraphs. The system integrates neural image restoration, automated defect segmentation, 2× super-resolution upscaling, multi-pass OCR transcription (Sanskrit / Devanagari, Grantha, Hindi, English), and fast multilingual semantic translation.
+### *Deep Learning-Powered Restoration, Epigraphic OCR Extraction & Multilingual Translation for Ancient Manuscripts and Inscriptions*
 
 ---
 
-## 🌟 Key Features
+## 🏛️ Project Overview: What We Built
 
-* **Multi-Domain Heritage Restoration:** Specialized restoration pipelines tailored for:
-  * 🌴 **Palm Leaf Manuscripts** (faded ink, wood-grain cracks, fungal stains, border loss)
-  * 📜 **Archival Paper Documents & Charters** (ink bleed-through, water damage, foxing, creases)
-  * 🏛️ **Monuments & Lapidary Epigraphs** (weather-eroded stone inscriptions, chisel abrasion)
-* **5 Deep Learning Architectures (Trained over 100 Epochs):**
-  * **Restormer** *(Selected Best Model)*: Multi-Dconv head transposed attention for zero-artifact restoration.
-  * **SwinIR**: Image restoration using shift-window Swin Transformer backbones.
-  * **U-Net**: Multi-scale encoder-decoder architecture with dense skip connections.
-  * **Pix2Pix**: Conditional Generative Adversarial Network (cGAN) for paired image translation.
-  * **DnCNN**: Deep convolutional neural network for residual noise and stain removal.
-* **Text-Preserving Defect Detection:** Automated morphological defect masking that identifies damp stains, wormholes, and tears while strictly protecting inscribed character strokes from inpainting erasure.
-* **High-Accuracy Multi-Pass OCR:** EasyOCR pipeline augmented with morphological background division and CLAHE contrast equalization, optimized for weathered historical scripts.
-* **Sub-Second Multilingual Translation:** High-speed translation cascade into **English, Hindi, Tamil, Telugu, Sanskrit, French, German, and Spanish**, featuring Indic continuous script segmentation and Sanskrit root morphological decomposition.
-* **Interactive Full-Stack Web Application:**
-  * Real-time split-view before/after comparison slider.
-  * Batch processing queue with live progress streaming.
-  * Comprehensive session history audit log with search and tag filtering.
-  * One-click academic Word report generation (`.docx`) with quantitative metric graphs.
+Ancient cultural heritage assets—such as palm-leaf manuscripts, historical charters, and stone inscriptions—suffer from severe physical degradation over centuries. Common defects include:
+* **Fungal mildew and water stains** that obscure written text.
+* **Wormholes, cracks, and physical tears** causing complete loss of structural material.
+* **Ink bleed-through and faded calligraphy** reducing stroke readability.
+* **Weathering and surface abrasion** eroding carved stone lapidary epigraphs.
 
----
+To solve this challenge, we built an **end-to-end Digital Heritage Restoration Platform**. The platform takes degraded historical scans and executes an integrated 5-stage preservation pipeline:
 
-## 🏗️ System Architecture
-
-```mermaid
-flowchart TD
-    A["Uploaded Historical Scan<br>(Palm Leaf / Paper / Stone)"] --> B["Damage Mask Detection<br>(Detect Tears, Wormholes, Stains)"]
-    A --> C["Deep Learning Restoration<br>(Restormer / SwinIR / UNet / Pix2Pix)"]
-    B --> C
-    C --> D["Restored Archival Image"]
-    D --> E["Super-Resolution (2x Upscaling)"]
-    D --> F["Multi-Pass OCR Engine<br>(Devanagari, Sanskrit, Latin)"]
-    F --> G["Extracted Transcription"]
-    G --> H["Multilingual Translation Engine<br>(English, Hindi, Tamil, Telugu, etc.)"]
-    E --> I["Web UI & Academic Report (.docx)"]
-    H --> I
+```
+[Degraded Scan] ➔ [Damage Mask Detection] ➔ [Deep Learning Restoration] ➔ [2x Super-Resolution] ➔ [Multi-Pass OCR] ➔ [Multilingual Translation]
 ```
 
+The system preserves character stroke integrity, enhances readability, transcribes archaic and classical scripts (Sanskrit, Devanagari, Grantha, Hindi, English), and translates the inscribed wisdom into modern languages in real time.
+
 ---
 
-## 📊 Benchmark & Model Performance
+## ⚙️ Core Pipeline Components
 
-All models were evaluated on the held-out test split across 100 epochs using standard computer vision metrics (**Peak Signal-to-Noise Ratio (PSNR)**, **Structural Similarity Index (SSIM)**, **Mean Squared Error (MSE)**, and **Mean Absolute Error (MAE)**):
+### 1. Text-Preserving Damage Mask Detection
+* Uses multi-scale morphological background analysis and adaptive thresholding to identify genuine structural defects (wormholes, tears, paper cracks, damp stains).
+* **Text Stroke Protection:** Automatically isolates inscribed text characters from the defect mask so inpainting algorithms restore background parchment **without erasing or blurring ancient writing**.
 
-| Architecture | PSNR (dB) ↑ | SSIM ↑ | MSE ↓ | MAE ↓ | Inference Latency (ms) | Status |
+### 2. Deep Learning Restoration Engine
+* Houses **5 distinct neural network architectures** trained over **100 epochs** on heritage datasets:
+  1. **Restormer** *(Selected Best Model)*: Multi-Dconv head transposed attention architecture designed for high-resolution image restoration without boundary seam artifacts.
+  2. **SwinIR**: Image restoration utilizing shifted-window Swin Transformer backbones.
+  3. **U-Net**: Multi-scale encoder-decoder architecture with dense skip connections to preserve localized edge details.
+  4. **Pix2Pix (cGAN)**: Conditional Generative Adversarial Network for paired image-to-image translation.
+  5. **DnCNN**: Deep feed-forward convolutional neural network for residual noise and background stain reduction.
+
+### 3. 2× Super-Resolution Enhancement
+* Upscales the restored document to double its spatial resolution, sharpening character edges and enhancing fine ink strokes for archival viewing and scholarly transcription.
+
+### 4. High-Accuracy Epigraphic OCR Engine
+* Multi-pass character recognition tailored for weathered epigraphs using EasyOCR with:
+  * Morphological background division normalization: $\frac{I}{I_{\text{bg}}} \times 240$ to eliminate palm-leaf wood grain and yellowed parchment.
+  * Contrast Limited Adaptive Histogram Equalization (CLAHE) for ink edge sharpening.
+  * Multi-core parallel execution delivering transcription in **under 4 seconds**.
+
+### 5. Fast Multilingual Translation Cascade
+* Translates transcribed Sanskrit, Hindi, and regional epigraphs into **English, Hindi, Tamil, Telugu, Sanskrit, French, German, and Spanish**.
+* **Indic Continuous Script Boundary Segmentation:** Inserts natural word boundaries into unspaced Sanskrit/Devanagari text while preserving combining vowel signs (*matras* and *viramas*).
+* **Morphological Root Synthesis:** Decomposes inflected classical Sanskrit words into grammatical roots and suffixes to decipher weathered or previously uncataloged inscriptions.
+* Returns translations in **0.15s – 0.5s**.
+
+---
+
+## 📊 Model Evaluation & 100-Epoch Benchmark Results
+
+All five architectures were systematically benchmarked on the held-out test split across 100 epochs using standard image reconstruction metrics:
+* **PSNR (Peak Signal-to-Noise Ratio)**: Measures reconstruction fidelity (higher is better).
+* **SSIM (Structural Similarity Index)**: Measures structural and perceptual preservation (closer to 1.0 is better).
+* **MSE (Mean Squared Error)** & **MAE (Mean Absolute Error)**: Quantifies pixel-level deviation.
+
+| Model Architecture | PSNR (dB) ↑ | SSIM ↑ | MSE ↓ | MAE ↓ | Inference Latency | Selection Status |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Restormer** | **19.16** | **0.6419** | **0.0156** | **0.0651** | 610.7 ms | 🏆 **Production Active** |
-| **SwinIR** | 18.84 | 0.6280 | 0.0171 | 0.0694 | 740.2 ms | Evaluated |
-| **U-Net** | 18.21 | 0.6014 | 0.0195 | 0.0742 | 320.5 ms | Evaluated |
-| **Pix2Pix (cGAN)** | 17.65 | 0.5892 | 0.0210 | 0.0789 | 450.1 ms | Evaluated |
-| **DnCNN** | 16.92 | 0.5510 | 0.0245 | 0.0863 | **180.4 ms** | Evaluated |
+| **Restormer** | **19.16 dB** | **0.6419** | **0.0156** | **0.0651** | 610 ms | 🏆 **Active Production Model** |
+| **SwinIR** | 18.84 dB | 0.6280 | 0.0171 | 0.0694 | 740 ms | Evaluated Checkpoint |
+| **U-Net** | 18.21 dB | 0.6014 | 0.0195 | 0.0742 | 320 ms | Evaluated Checkpoint |
+| **Pix2Pix (cGAN)** | 17.65 dB | 0.5892 | 0.0210 | 0.0789 | 450 ms | Evaluated Checkpoint |
+| **DnCNN** | 16.92 dB | 0.5510 | 0.0245 | 0.0863 | **180 ms** | Evaluated Checkpoint |
 
-*Note: Model checkpoint weights and 100-epoch training curves are stored in `outputs/checkpoints/` and compiled in `outputs/model_comparison.csv`.*
+*All training curves, per-epoch logs (1–100), and metric summaries are preserved in `outputs/checkpoints/` and `outputs/model_comparison.csv`.*
 
 ---
 
-## 📂 Repository Structure
+## 🖼️ Supported Heritage Domains & Curated Datasets
+
+The platform is designed to handle diverse historical media across three primary domains:
+
+| Domain | Historical Media Types | Typical Degradations Addressed |
+| :--- | :--- | :--- |
+| **🌴 Palm Leaf** | Chola Grantha folios, Odia palm leaves, Southern Buddhist Pali texts | Wood-grain cracks, edge fraying, fungal blotches, faded stylus grooves |
+| **📜 Archival Documents** | Vedic Sanskrit parchments, Gilgit birch bark (Bhurjapatra), Vijayanagara charters | Ink bleed-through, paper foxing, water stains, mold spots, brittle tears |
+| **🏛️ Monuments** | Ashokan rock edicts, Pallava reliefs, Chola temple wall inscriptions | Stone surface abrasion, erosion, micro-fractures, chisel weathering |
+
+*The repository includes **21 curated benchmark samples** in `test_samples/` (including 12 authentic real-world external historical folios) to validate zero-shot generalization on un-modeled archival collections.*
+
+---
+
+## 💻 Web Application Features
+
+The interactive web application provides a complete digital laboratory for archivists, epigraphists, and researchers:
+
+1. **Before/After Split-View Comparison:**
+   * Interactive drag-and-drop image upload with real-time horizontal comparison slider to visually inspect defect removal.
+2. **Live Execution Tracker:**
+   * Step-by-step progress indicator tracking Damage Masking $\rightarrow$ Neural Inpainting $\rightarrow$ OCR Transcription $\rightarrow$ Translation.
+3. **Editable Transcription & Live Translation:**
+   * Transcribed OCR text appears in an interactive workspace where users can edit or enter custom text and trigger instant re-translation across 8 target languages.
+4. **Audit History & Search:**
+   * Persistent database of all processed scans with timestamped records, thumbnail previews, model used, and search filtering.
+5. **Academic Report Generation (`.docx`):**
+   * One-click download of a structured research report containing image comparisons, defect statistics, OCR transcripts, translations, and quantitative quality metrics.
+
+---
+
+## 📁 Project Structure
 
 ```
 digital-heritage/
-├── app.py                         # Flask production web application & REST APIs
-├── Dockerfile                     # Multi-stage production container build
-├── docker-compose.yml             # Local container orchestration
-├── requirements.txt               # Python package dependencies
-├── CLOUD_DEPLOYMENT_GUIDE.md      # Detailed cloud deployment documentation
-├── PROJECT_FILE_OUTPUT_MAPPING.md # Viva & evaluation reference sheet
+├── app.py                         # Flask web application & REST API routes
+├── requirements.txt               # Project library dependencies
+├── PROJECT_FILE_OUTPUT_MAPPING.md # Evaluation and viva reference mapping
 │
-├── inference/                     # Unified Inference Subsystem
-│   ├── ocr_engine.py              # Multi-pass EasyOCR with CLAHE contrast enhancement
-│   ├── translation.py            # Neural translation cascade & Sanskrit root synthesis
-│   ├── pipeline.py                # End-to-end pipeline execution runner
-│   ├── restore.py                 # Tile-blended neural image reconstruction
-│   └── super_resolution.py       # 2x bicubic/neural upscaler
+├── inference/                     # Unified Inference & Processing Subsystem
+│   ├── ocr_engine.py              # Multi-pass EasyOCR character transcription
+│   ├── translation.py            # Neural translation cascade & Sanskrit root lexicon
+│   ├── pipeline.py                # End-to-end pipeline coordinator
+│   ├── restore.py                 # Tile-blended neural restoration
+│   └── super_resolution.py       # 2x image upscaling module
 │
-├── models/                        # Serialized PyTorch Checkpoints
+├── models/                        # Serialized PyTorch Weights
 │   ├── best_model/                # Active production model (Restormer)
 │   ├── restormer/                 # Restormer weights & training logs
 │   ├── swinir/                    # SwinIR weights & training logs
@@ -104,157 +125,84 @@ digital-heritage/
 │   ├── pix2pix/                   # Pix2Pix weights & training logs
 │   └── dncnn/                     # DnCNN weights & training logs
 │
-├── test_samples/                  # 21 Curated Benchmark & Generalization Samples
+├── test_samples/                  # Curated Historical Benchmark Test Samples
 │   ├── index.json                 # Metadata mapping domain, era, and severity
 │   ├── external_palmleaf_*.png    # Chola & Ganga dynasty Grantha/Odia palm leaves
 │   ├── external_parchment_*.png   # 16th Century Rigvedic Sanskrit manuscripts
 │   ├── external_stone_*.png       # Ashokan Brahmi & Pallava relief lapidary epigraphs
-│   └── README.md                  # Detailed testing guide for sample evaluation
+│   └── README.md                  # Sample evaluation documentation
 │
 ├── static/                        # Frontend UI Assets
-│   ├── css/                       # Custom styling & responsive layouts
-│   ├── js/                        # Split-slider, AJAX pipeline controllers
-│   ├── uploads/                   # Staged user uploads
-│   └── outputs/                   # Processed restorations & damage masks
+│   ├── css/                       # Stylesheets & theme styling
+│   ├── js/                        # Split-slider, AJAX controllers
+│   ├── uploads/                   # Staged input images
+│   └── outputs/                   # Restored archival outputs & damage masks
 │
-├── templates/                     # Jinja2 HTML Templates
-│   ├── index.html                 # Main dashboard with drag-and-drop & split viewer
+├── templates/                     # Application HTML Pages
+│   ├── index.html                 # Main dashboard with split-slider viewer
 │   ├── process.html               # Live execution progress bar
-│   ├── result.html                # Inspection workspace & translation viewer
+│   ├── result.html                # Inspection & translation workspace
 │   └── comparison.html            # Multi-model side-by-side benchmark viewer
 │
 ├── training/                      # Training scripts & loss functions (Epochs 1-100)
-└── evaluation/                    # Quantitative metric computation & strip generators
+└── evaluation/                    # Quantitative evaluation & comparison scripts
 ```
 
 ---
 
-## 🚀 Quick Start (Local Setup)
+## 🛠️ How to Run Locally
 
-### 1. Prerequisites
-* Python 3.10 or 3.11 installed.
-* Git installed.
-* *(Optional)* NVIDIA GPU with CUDA support for accelerated inference.
-
-### 2. Clone the Repository
+### 1. Clone the Repository
 ```bash
 git clone https://github.com/Ramyasree2811/digital-heritage.git
 cd digital-heritage
 ```
 
-### 3. Set Up Virtual Environment & Dependencies
+### 2. Set Up Virtual Environment & Dependencies
 ```bash
 # Create virtual environment
 python -m venv venv
 
 # Activate virtual environment
-# Windows:
+# On Windows:
 .\venv\Scripts\activate
-# Linux/macOS:
+# On Linux / macOS:
 source venv/bin/activate
 
-# Install dependencies (CPU PyTorch by default)
-pip install --upgrade pip
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-### 4. Run the Web Application
+### 3. Launch the Application
 ```bash
 python app.py
 ```
-Open your browser and navigate to `http://127.0.0.1:5000`.
-
----
-
-## 🐳 Docker Deployment
-
-To build and run the application in an isolated container:
-
-```bash
-# Build the Docker image
-docker build -t digital-heritage-restorer .
-
-# Run the container
-docker run -d -p 7860:7860 -e PORT=7860 digital-heritage-restorer
+Open your web browser and go to:
 ```
-Access the application at `http://localhost:7860`.
-
-Or with **Docker Compose**:
-```bash
-docker-compose up -d --build
+http://127.0.0.1:5000
 ```
 
 ---
 
-## ☁️ Cloud Deployment Options
+## 🎯 Verification & Testing Commands
 
-| Cloud Provider | Type | Memory | Deploy Method | Notes |
-| :--- | :--- | :--- | :--- | :--- |
-| **[Railway.app](https://railway.app)** | PaaS | Up to 8 GB | GitHub Push | **Recommended.** Zero configuration, auto-detects `Dockerfile`, no OOM crashes. |
-| **[Hugging Face Spaces](https://huggingface.co/spaces)** | Space | 16 GB | Git Push | Free 16 GB RAM Docker tier; full compatibility with YAML metadata. |
-| **[Google Cloud Run](https://cloud.google.com/run)** | Serverless | 2 GB – 4 GB | `gcloud run deploy` | Scales to zero when idle; generous 2M free requests/month. |
-| **[Koyeb](https://www.koyeb.com)** | PaaS | 1 GB – 2 GB | GitHub Push | Easy automated CI/CD directly from GitHub repo. |
-| **Ubuntu VPS (Hetzner / OCI)** | Dedicated VM | Up to 24 GB | Docker Compose | Oracle Cloud Always-Free tier offers up to 24 GB RAM free forever. |
+To test the system from the terminal without the web UI:
 
-*For complete step-by-step instructions for each provider, refer to [CLOUD_DEPLOYMENT_GUIDE.md](CLOUD_DEPLOYMENT_GUIDE.md).*
-
----
-
-## 🔌 API Endpoints
-
-### 1. Restore Image
-* **Endpoint:** `POST /api/restore`
-* **Content-Type:** `multipart/form-data`
-* **Parameters:**
-  * `image`: File upload (PNG, JPG, WEBP, BMP).
-  * `model`: Model name (`best`, `Restormer`, `SwinIR`, `UNet`, `Pix2Pix`, `DnCNN`).
-  * `domain`: Artifact domain (`palm_leaf`, `documents`, `monuments`).
-  * `run_ocr`: Boolean flag (`true` / `false`).
-  * `target_lang`: ISO language code (`en`, `hi`, `ta`, `te`, `sa`, `fr`, `de`, `es`).
-* **Response:**
-  ```json
-  {
-    "success": true,
-    "run_id": "9eeec675-4f80-450a-a53a-674976adb78b",
-    "restored_url": "/static/outputs/9eeec675_restored.png",
-    "extracted_text": "धर्मो रक्षति रक्षितः",
-    "translated_text": "Righteousness protects and is protected",
-    "metrics": {
-      "PSNR": 19.82,
-      "SSIM": 0.6724
-    },
-    "processing_time": 3.42
-  }
+* **Run End-to-End Restoration on a Palm-Leaf Sample:**
+  ```bash
+  python -m inference.pipeline --input test_samples/palm_leaf_0315.png --domain palm_leaf --target_lang en
   ```
 
-### 2. Translate Extracted Text
-* **Endpoint:** `POST /api/translate`
-* **Content-Type:** `application/json`
-* **Payload:**
-  ```json
-  {
-    "text": "विद्या ददाति विनयं",
-    "target_lang": "en"
-  }
+* **Test Multi-Model Evaluation Script:**
+  ```bash
+  python evaluate.py
   ```
-* **Response:**
-  ```json
-  {
-    "success": true,
-    "translation": "Knowledge gives humility",
-    "target_lang": "en"
-  }
-  ```
-
-### 3. Session History
-* **Endpoint:** `GET /api/history?type=all&q=`
-* **Response:** Returns list of historic restoration jobs, timestamps, thumbnail links, OCR outputs, and translations.
 
 ---
 
 ## 📜 Citation & Academic Use
 
-If you use this codebase or the curated epigraphic dataset in your academic research, please cite:
+If you use this system or dataset in your academic research or project presentation:
 
 ```bibtex
 @misc{digital_heritage_restoration_2026,
@@ -264,9 +212,3 @@ If you use this codebase or the curated epigraphic dataset in your academic rese
   howpublished={\url{https://github.com/Ramyasree2811/digital-heritage}}
 }
 ```
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
